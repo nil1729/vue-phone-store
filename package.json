@@ -1,0 +1,25 @@
+{
+	"name": "phone-store",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node server.js",
+		"server": "nodemon server",
+		"client": "npm run serve --prifix client",
+		"dev": "concurrently \"npm run server\" \"npm run client\""
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.17.1",
+		"mongoose": "^5.9.29"
+	},
+	"devDependencies": {
+		"concurrently": "^5.3.0",
+		"dotenv": "^8.2.0",
+		"nodemon": "^2.0.4"
+	}
+}
