@@ -15,6 +15,7 @@
 	"license": "ISC",
 	"dependencies": {
 		"express": "^4.17.1",
+		"googleapis": "^39.2.0",
 		"mongoose": "^5.9.29"
 	},
 	"devDependencies": {
