@@ -89,12 +89,13 @@ export default {
           data: res.user,
         });
       } catch (error) {
-        console.error(error);
+        this.resetState();
+        return this.$store.commit("SET_ERRORS", {
+          code: error.code,
+          message: error.message,
+        });
       }
-      this.emailValid = null;
-      this.email = "";
-      this.password = "";
-      this.submitted = false;
+      this.resetState();
       if (this.$route.query.redirect) {
         return this.$router.push(`/${this.$route.query.redirect}`);
       }
@@ -102,6 +103,12 @@ export default {
     },
     changeMode() {
       this.mode = this.mode === "login" ? "register" : "login";
+    },
+    resetState() {
+      this.emailValid = null;
+      this.email = "";
+      this.password = "";
+      this.submitted = false;
     },
     checkEmail() {
       let validTest = validator.isEmail(this.email);

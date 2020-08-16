@@ -13,10 +13,14 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
 	state: {
 		user: null,
+		errors: null,
 	},
 	mutations: {
 		SET_USER_STATE: function(state, user) {
 			state.user = user;
+		},
+		SET_ERRORS(state, error) {
+			state.errors = error;
 		},
 	},
 	getters: {},

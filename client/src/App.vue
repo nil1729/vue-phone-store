@@ -1,10 +1,12 @@
 <template>
   <div>
+    <app-alert />
     <router-view />
   </div>
 </template>
 
 <script>
+import Alert from "./components/utils/Alerts";
 export default {
   name: "App-Phone-Store",
   watch: {
@@ -13,6 +15,9 @@ export default {
         this.$router.push("/login");
       }
     },
+  },
+  components: {
+    "app-alert": Alert,
   },
 };
 </script>
