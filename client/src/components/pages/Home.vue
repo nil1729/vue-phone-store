@@ -1,12 +1,16 @@
 <template>
   <div class="conatiner">
-    <h1>Home Page</h1>
+    <app-navbar />
   </div>
 </template>
 
 <script>
+import Navbar from "../layouts/Navbar";
 export default {
   name: "Home",
+  components: {
+    "app-navbar": Navbar,
+  },
 };
 </script>
 
