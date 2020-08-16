@@ -55,6 +55,11 @@ export default {
       dropdownOpen: false,
     };
   },
+  watch: {
+    $route() {
+      this.dropdownOpen = false;
+    },
+  },
   methods: {
     async callSignOut() {
       this.$store.dispatch("userSignOut");

@@ -1,0 +1,63 @@
+<template>
+  <div class="container mt-3">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="image m-auto">
+          <img :src="user && user.photoURL" :alt="user && user.displayName" />
+        </div>
+      </div>
+      <div class="col-md-8 bg-light p-4">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">Display Name</th>
+              <td>{{ user && user.displayName }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Phone Number</th>
+              <td class="text-danger">{{ user && user.phoneNumber }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Email Address</th>
+              <td>{{ user && user.email }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Sign in Method</th>
+              <td class="text-capitalize">{{ user && user.providerId }}</td>
+            </tr>
+            <tr>
+              <th scope="row">Static User ID</th>
+              <td>{{ user && user.id }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Profile-Page",
+  computed: {
+    user() {
+      return { ...this.$store.state.user, phoneNumber: "Null" };
+    },
+  },
+};
+</script>
+
+<style scoped>
+.image {
+  height: 12rem;
+  width: 12rem;
+}
+table th {
+  font-weight: 500;
+}
+table th,
+table td {
+  border-top: none;
+  border-bottom: 1px solid #dee2e6;
+}
+</style>
