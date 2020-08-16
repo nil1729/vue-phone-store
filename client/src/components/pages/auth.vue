@@ -95,6 +95,9 @@ export default {
       this.email = "";
       this.password = "";
       this.submitted = false;
+      if (this.$route.query.redirect) {
+        return this.$router.push(`/${this.$route.query.redirect}`);
+      }
       this.$router.push("/");
     },
     changeMode() {

@@ -5,7 +5,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "App-Phone-Store",
+  watch: {
+    "$store.state.user": function () {
+      if (!this.$store.state.user) {
+        this.$router.push("/login");
+      }
+    },
+  },
+};
 </script>
 
 <style>

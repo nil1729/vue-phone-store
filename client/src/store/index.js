@@ -36,6 +36,10 @@ const store = new Vuex.Store({
 			}
 			context.commit('SET_USER_STATE', user);
 		},
+		async userSignOut(context) {
+			await firebase.auth().signOut();
+			context.commit('SET_USER_STATE', null);
+		},
 	},
 });
 

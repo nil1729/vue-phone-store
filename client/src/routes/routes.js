@@ -12,7 +12,6 @@ const routes = [
 		},
 	},
 	{
-		name: 'Home',
 		children: [
 			{
 				path: '/cart',
