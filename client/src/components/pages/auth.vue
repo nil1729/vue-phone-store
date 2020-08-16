@@ -1,6 +1,6 @@
 <template>
   <div class="container bg-light py-4 px-5 my-3">
-    <h2 class="text-danger text-center">{{ mode === 'login' ? 'Login' : 'Register' }}</h2>
+    <h2 class="text-info text-center">{{ mode === 'login' ? 'Login' : 'Register' }}</h2>
     <hr class="mt-2 mb-4" id="line" />
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
@@ -13,13 +13,13 @@
           placeholder="Enter email"
           v-model="email"
           @keyup="checkEmail"
-          :class="[{'border-danger': emailValid===false}, {'border-success': emailValid}]"
+          :class="[{'border-danger': emailValid!=='valid' && emailValid}, {'border-success': emailValid}]"
         />
         <small
           id="emailHelp"
           class="form-text"
-          :class="[{'text-danger': emailValid===false}, {'text-success': emailValid} ,{'text-muted': emailValid===null}]"
-        >{{emailValid===null ? `We'll never share your email with anyone else` : !emailValid ? 'Email Address is Not Valid': 'Valid Email Address'}}</small>
+          :class="[{'text-danger': emailValid!=='valid'}, {'text-success': emailValid} ,{'text-muted': emailValid===null}]"
+        >{{emailValid===null ? emailValidDialog['initial'] : emailValidDialog[emailValid]}}</small>
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Password</label>
@@ -34,8 +34,9 @@
       <div class="form-group">
         <button
           type="submit"
+          :disabled="submitted"
           class="btn btn-sm btn-primary"
-        >{{ mode === 'login' ? 'Login' : 'Register' }}</button>
+        >{{ submitted ? 'Loading ...' : mode === 'login' ? 'Login' : 'Register' }}</button>
         <button
           @click="changeMode"
           type="button"
@@ -48,6 +49,7 @@
 
 <script>
 import validator from "validator";
+import firebase from "@/firebase";
 export default {
   name: "Authentication",
   data() {
@@ -56,17 +58,54 @@ export default {
       email: "",
       password: "",
       emailValid: null,
+      emailValidDialog: {
+        initial: `We'll never share your email with anyone else`,
+        gmail: `Please don't use Gmail account`,
+        valid: "Your Email Address is valid",
+        invalid: "Your Email Address is not valid",
+      },
+      submitted: false,
     };
   },
   methods: {
-    handleSubmit() {
-      console.log(this.email, this.password);
+    async handleSubmit() {
+      if (this.emailValid !== "valid" || this.password.trim().length === 0) {
+        return;
+      }
+      this.submitted = true;
+      let res;
+      try {
+        if (this.mode === "register") {
+          res = await firebase
+            .auth()
+            .createUserWithEmailAndPassword(this.email, this.password);
+        } else {
+          res = await firebase
+            .auth()
+            .signInWithEmailAndPassword(this.email, this.password);
+        }
+        this.$store.dispatch("userAuthenticate", res);
+      } catch (error) {
+        console.error(error);
+      }
+      this.emailValid = null;
+      this.email = "";
+      this.password = "";
+      this.submitted = false;
     },
     changeMode() {
       this.mode = this.mode === "login" ? "register" : "login";
     },
     checkEmail() {
-      this.emailValid = validator.isEmail(this.email);
+      let validTest = validator.isEmail(this.email);
+      if (!validTest) {
+        return (this.emailValid = "invalid");
+      }
+      const domain = this.email.split("@")[1];
+      if (domain === "gmail.com") {
+        return (this.emailValid = "gmail");
+      }
+      this.emailValid = "valid";
     },
   },
 };
