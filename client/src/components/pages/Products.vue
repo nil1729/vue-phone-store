@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import ProductItem from "./ProductItem";
+import ProductItem from "../layouts/ProductItem";
 export default {
   name: "Product",
   components: {

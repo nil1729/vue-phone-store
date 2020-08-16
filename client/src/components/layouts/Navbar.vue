@@ -14,7 +14,7 @@
         </router-link>
       </ul>
     </div>
-    <button type="button" class="btn" id="cart-btn">
+    <button @click="$router.push('/cart')" type="button" class="btn" id="cart-btn">
       <i class="fas fa-cart-plus"></i>
       My Cart
       <span class="badge badge-light">{{''}}</span>
