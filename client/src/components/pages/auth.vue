@@ -86,7 +86,7 @@ export default {
         }
         await this.$store.dispatch("userAuthenticate", {
           type: this.mode,
-          data: res,
+          data: res.user,
         });
       } catch (error) {
         console.error(error);
@@ -95,6 +95,7 @@ export default {
       this.email = "";
       this.password = "";
       this.submitted = false;
+      this.$router.push("/");
     },
     changeMode() {
       this.mode = this.mode === "login" ? "register" : "login";

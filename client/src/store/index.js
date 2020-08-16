@@ -22,14 +22,14 @@ const store = new Vuex.Store({
 	getters: {},
 	actions: {
 		async userAuthenticate(context, { type, data }) {
-			let user = { ...data.user.providerData[0] };
+			let user = { ...data.providerData[0] };
 			const idToken = await firebase.auth().currentUser.getIdToken(true);
-			let userID = data.user.uid;
+			let userID = data.uid;
 			user.id = userID;
 			if (type === 'register') {
 				let res = await axios.post(
 					'/api/v1/login',
-					{ idToken: idToken, user: user },
+					{ idToken: idToken },
 					config
 				);
 				user = res.data.user;
