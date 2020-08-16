@@ -84,7 +84,10 @@ export default {
             .auth()
             .signInWithEmailAndPassword(this.email, this.password);
         }
-        this.$store.dispatch("userAuthenticate", res);
+        await this.$store.dispatch("userAuthenticate", {
+          type: this.mode,
+          data: res,
+        });
       } catch (error) {
         console.error(error);
       }

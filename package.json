@@ -7,7 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node server.js",
 		"server": "nodemon server",
-		"client": "npm run serve --prifix client",
+		"client": "npm run serve --prefix client",
 		"dev": "concurrently \"npm run server\" \"npm run client\""
 	},
 	"keywords": [],
@@ -15,7 +15,10 @@
 	"license": "ISC",
 	"dependencies": {
 		"express": "^4.17.1",
-		"mongoose": "^5.9.29"
+		"firebase": "^7.18.0",
+		"firebase-admin": "^9.1.0",
+		"mongoose": "^5.9.29",
+		"unique-names-generator": "^4.3.0"
 	},
 	"devDependencies": {
 		"concurrently": "^5.3.0",
