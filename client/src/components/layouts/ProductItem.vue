@@ -2,8 +2,9 @@
   <div class="card" style="width: 18rem;">
     <div class="image">
       <img :src="product && product.photoURL" alt />
-      <button class="btn btn-primary cart-btn">
-        <i class="fal fa-cart-arrow-down"></i>
+      <button @click="addToCart" class="btn btn-primary cart-btn">
+        <i v-if="!hasCarted" class="fal fa-cart-arrow-down"></i>
+        <p v-else class="lead mb-0">In Cart</p>
       </button>
     </div>
     <div class="card-body d-flex justify-content-between align-items-center">
@@ -17,6 +18,18 @@
 export default {
   name: "Product-Item",
   props: ["product"],
+  computed: {
+    hasCarted() {
+      return (
+        this.$store.state.cart && this.$store.state.cart.includes(this.product)
+      );
+    },
+  },
+  methods: {
+    addToCart() {
+      this.$store.commit("ADD_TO_CART", this.product);
+    },
+  },
 };
 </script>
 
@@ -40,6 +53,9 @@ export default {
   font-size: 1.3rem;
   padding: 2px 5px;
   box-shadow: none !important;
+}
+.cart-btn .lead {
+  font-weight: 500;
 }
 .image img {
   height: 100%;

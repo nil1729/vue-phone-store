@@ -37,6 +37,14 @@ const store = new Vuex.Store({
 		SET_PRODUCTS: function(state, products) {
 			state.products = products;
 		},
+		ADD_TO_CART: function(state, product) {
+			const hasAlready = state.cart.find(item => item.id === product.id);
+			if (!hasAlready) {
+				product.hasCarted = true;
+				state.cart.push(product);
+			}
+			state.cart.status = 'unsaved';
+		},
 	},
 	getters: {},
 	actions: {
