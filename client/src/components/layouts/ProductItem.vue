@@ -42,6 +42,7 @@ export default {
   height: 18rem;
   overflow: hidden;
   position: relative;
+  text-align: center;
 }
 .cart-btn {
   position: absolute;
@@ -59,9 +60,10 @@ export default {
 }
 .image img {
   height: 100%;
-  width: 100%;
+  /* width: 100%; */
   transition: 0.5s linear all;
   margin: auto;
+  padding: 2rem;
 }
 .image:hover img {
   transform: scale(1.1);

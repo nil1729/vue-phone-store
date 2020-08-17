@@ -3,13 +3,12 @@
     <router-link to="/" class="navbar-brand">
       <i class="fas fa-2x fa-phone-office"></i>
     </router-link>
-    <button class="navbar-toggler" type="button">
+    <!-- <button class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
-    </button>
-
+    </button>-->
     <div>
       <ul class="navbar-nav mr-auto ml-5">
-        <router-link tag="li" to="/" exact class="nav-item" active-class="active">
+        <router-link tag="li" to="/" exact class="nav-item active">
           <a class="nav-link lead">Phone Store</a>
         </router-link>
       </ul>
