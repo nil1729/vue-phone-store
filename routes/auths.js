@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const { uniqueNamesGenerator, names } = require('unique-names-generator');
 const admin = require('../config/admin');
+const verifyAuth = require('../middleware/auth');
 
-router.post('/login', async (req, res) => {
+router.get('/register', verifyAuth, async (req, res) => {
 	try {
-		const decodedToken = await admin.auth().verifyIdToken(req.body.idToken);
-		if (decodedToken.name) {
+		if (req.token.name) {
 			return res.status(200).json({
 				msg: 'Already Registered',
 			});
@@ -17,13 +17,40 @@ router.post('/login', async (req, res) => {
 			separator: ' ',
 			style: 'capital',
 		});
-		const updatedUser = await admin.auth().updateUser(decodedToken.uid, {
+		const updatedUser = await admin.auth().updateUser(req.authID, {
 			displayName,
 			photoURL:
 				'https://occtao.com/?qa=image&qa_blobid=10029442562307742919&qa_size=200',
 		});
+		const user = {
+			details: {
+				id: req.authID,
+				...updatedUser.providerData[0],
+				phoneNumber: null,
+			},
+			cart: [],
+		};
+		await admin.firestore().collection('users').doc(req.authID).set(user);
 		return res.json({
-			user: { id: decodedToken.uid, ...updatedUser.providerData[0] },
+			user,
+		});
+	} catch (e) {
+		console.log(e);
+		return res.status(400).json({
+			msg: 'Invalid Credentials',
+		});
+	}
+});
+
+router.get('/login', verifyAuth, async (req, res) => {
+	try {
+		const docSnap = await admin
+			.firestore()
+			.collection('users')
+			.doc(req.authID)
+			.get();
+		return res.json({
+			user: docSnap.data(),
 		});
 	} catch (e) {
 		console.log(e);

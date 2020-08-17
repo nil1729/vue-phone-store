@@ -10,6 +10,7 @@ module.exports = async (req, res, next) => {
 		const token = req.headers['x-auth-token'];
 		const decodedToken = await admin.auth().verifyIdToken(token);
 		req.authID = decodedToken.uid;
+		req.token = decodedToken;
 		next();
 	} catch (e) {
 		return res.status(403).json({

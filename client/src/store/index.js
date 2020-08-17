@@ -2,10 +2,13 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from '@/firebase';
 import axios from 'axios';
-const config = {
-	headers: {
-		'Content-Type': 'application/json',
-	},
+const createConfig = () => {
+	return {
+		headers: {
+			'Content-Type': 'application/json',
+			'x-auth-token': localStorage.getItem('authToken'),
+		},
+	};
 };
 
 Vue.use(Vuex);
@@ -15,13 +18,21 @@ const store = new Vuex.Store({
 		user: null,
 		errors: null,
 		products: null,
+		cart: null,
+		productFetching: true,
 	},
 	mutations: {
 		SET_USER_STATE: function(state, user) {
 			state.user = user;
 		},
+		SET_CART_STATE: function(state, cart) {
+			state.cart = cart;
+		},
 		SET_ERRORS(state, error) {
 			state.errors = error;
+		},
+		SET_PRODUCT_LOADING(state, payload) {
+			state.productFetching = payload;
 		},
 		SET_PRODUCTS: function(state, products) {
 			state.products = products;
@@ -32,18 +43,18 @@ const store = new Vuex.Store({
 		async userAuthenticate(context, { type, data }) {
 			let user = { ...data.providerData[0] };
 			const idToken = await firebase.auth().currentUser.getIdToken(true);
-			let userID = data.uid;
-			user.id = userID;
+			localStorage.setItem('authToken', idToken);
+			user.id = data.uid;
 			if (type === 'register') {
-				let res = await axios.post(
-					'/api/v1/login',
-					{ idToken: idToken },
-					config
-				);
+				let res = await axios.get('/api/v1/register', createConfig());
+				user = res.data.user;
+			} else {
+				let res = await axios.get('/api/v1/login', createConfig());
 				user = res.data.user;
 			}
-			localStorage.setItem('authToken', idToken);
-			context.commit('SET_USER_STATE', user);
+			context.commit('SET_USER_STATE', user.details);
+			context.commit('SET_CART_STATE', user.cart);
+			context.dispatch('fetchProducts');
 		},
 		async userSignOut(context) {
 			localStorage.removeItem('authToken');
@@ -52,6 +63,7 @@ const store = new Vuex.Store({
 		},
 		async fetchProducts(context) {
 			try {
+				context.commit('SET_PRODUCT_LOADING', true);
 				if (!localStorage.authToken) {
 					return;
 				}
@@ -63,6 +75,7 @@ const store = new Vuex.Store({
 				};
 				const res = await axios.get('/api/v1/products', config);
 				context.commit('SET_PRODUCTS', res.data.products);
+				context.commit('SET_PRODUCT_LOADING', false);
 			} catch (e) {
 				console.log(e);
 			}

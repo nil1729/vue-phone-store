@@ -16,22 +16,16 @@
 import ProductItem from "../layouts/ProductItem";
 export default {
   name: "Product",
-  data() {
-    return {
-      loading: true,
-    };
-  },
   computed: {
     products() {
       return this.$store.state.products;
     },
+    loading() {
+      return this.$store.state.productFetching;
+    },
   },
   components: {
     "app-product-item": ProductItem,
-  },
-  async mounted() {
-    await this.$store.dispatch("fetchProducts");
-    this.loading = false;
   },
 };
 </script>

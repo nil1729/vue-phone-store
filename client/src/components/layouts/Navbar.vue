@@ -10,7 +10,7 @@
     <div>
       <ul class="navbar-nav mr-auto ml-5">
         <router-link tag="li" to="/" exact class="nav-item" active-class="active">
-          <a class="nav-link lead">Products</a>
+          <a class="nav-link lead">Phone Store</a>
         </router-link>
       </ul>
     </div>
@@ -20,7 +20,9 @@
           <router-link to="/cart" type="button" class="btn" id="cart-btn">
             <i class="fas fa-cart-plus"></i>
             My Cart
-            <span class="badge badge-light">{{''}}</span>
+            <span
+              class="badge badge-light"
+            >{{ cartItems === 0 ? '' : cartItems }}</span>
           </router-link>
         </li>
         <li class="nav-item dropdown">
@@ -72,6 +74,9 @@ export default {
     displayName: function () {
       return this.$store.state.user && this.$store.state.user.displayName;
     },
+    cartItems: function () {
+      return this.$store.state.cart && this.$store.state.cart.length;
+    },
   },
 };
 </script>
@@ -82,6 +87,11 @@ export default {
 }
 nav {
   background-color: #3f99ff;
+}
+.nav-link.lead {
+  font-family: "Red Rose", cursive;
+  font-size: 1.5rem;
+  letter-spacing: 1.5px;
 }
 .dropdown-menu {
   left: -7rem;
