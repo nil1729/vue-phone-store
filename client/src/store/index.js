@@ -42,23 +42,17 @@ const store = new Vuex.Store({
 			state.products = products;
 		},
 		ADD_TO_CART: function(state, product) {
-			const hasAlready = state.cart.find(item => item.id === product.id);
-			if (!hasAlready) {
-				product.quantity = 1;
-				state.cart.push(product);
-			}
-			state.cart.status = 'unsaved';
+			product.quantity = 1;
+			state.cart.push(product);
 		},
 		REMOVE_CART_ITEM: function(state, id) {
 			state.cart = state.cart.filter(item => item.id !== id);
-			state.cart.status = 'unsaved';
 		},
 		CHANGE_ITEM_QUANTITY: function(state, { id, quantity }) {
 			state.cart = state.cart.filter(item => {
 				if (item.id === id) return (item.quantity += quantity);
 				else return item;
 			});
-			state.cart.status = 'unsaved';
 		},
 	},
 	getters: {},
@@ -100,8 +94,13 @@ const store = new Vuex.Store({
 		},
 		async addToCart(context, product) {
 			try {
-				context.commit('ADD_TO_CART', product);
-				await context.dispatch('saveCartProduct');
+				const hasAlready = context.state.cart.find(
+					item => item.id === product.id
+				);
+				if (!hasAlready) {
+					context.commit('ADD_TO_CART', product);
+					await context.dispatch('saveCartProduct');
+				}
 			} catch (e) {
 				console.log(e);
 			}
