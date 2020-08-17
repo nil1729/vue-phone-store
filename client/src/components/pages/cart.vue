@@ -34,6 +34,7 @@
                 <button type="button" class="btn btn-outline-info">{{ item.quantity }}</button>
                 <button
                   @click="changeQuantity(item.id, 1)"
+                  :disabled="item.quantity>9"
                   type="button"
                   class="btn btn-outline-info"
                 >+</button>
@@ -70,6 +71,10 @@ export default {
     changeQuantity(id, quantity) {
       this.$store.commit("CHANGE_ITEM_QUANTITY", { id, quantity });
     },
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.dispatch("saveCartProduct");
+    next();
   },
 };
 </script>

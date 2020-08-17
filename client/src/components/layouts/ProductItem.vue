@@ -20,14 +20,21 @@ export default {
   props: ["product"],
   computed: {
     hasCarted() {
-      return (
-        this.$store.state.cart && this.$store.state.cart.includes(this.product)
-      );
+      if (this.$store.state.cart) {
+        let index = this.$store.state.cart.findIndex(
+          (item) => item.id === this.product.id
+        );
+        if (index > -1) {
+          return true;
+        }
+        return false;
+      }
+      return false;
     },
   },
   methods: {
     addToCart() {
-      this.$store.commit("ADD_TO_CART", this.product);
+      this.$store.dispatch("addToCart", this.product);
     },
   },
 };

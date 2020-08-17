@@ -44,7 +44,6 @@ const store = new Vuex.Store({
 		ADD_TO_CART: function(state, product) {
 			const hasAlready = state.cart.find(item => item.id === product.id);
 			if (!hasAlready) {
-				product.hasCarted = true;
 				product.quantity = 1;
 				state.cart.push(product);
 			}
@@ -52,12 +51,14 @@ const store = new Vuex.Store({
 		},
 		REMOVE_CART_ITEM: function(state, id) {
 			state.cart = state.cart.filter(item => item.id !== id);
+			state.cart.status = 'unsaved';
 		},
 		CHANGE_ITEM_QUANTITY: function(state, { id, quantity }) {
 			state.cart = state.cart.filter(item => {
 				if (item.id === id) return (item.quantity += quantity);
 				else return item;
 			});
+			state.cart.status = 'unsaved';
 		},
 	},
 	getters: {},
@@ -90,15 +91,28 @@ const store = new Vuex.Store({
 				if (!localStorage.authToken) {
 					return;
 				}
-				const config = {
-					headers: {
-						'Content-Type': 'application/json',
-						'x-auth-token': localStorage.getItem('authToken'),
-					},
-				};
-				const res = await axios.get('/api/v1/products', config);
+				const res = await axios.get('/api/v1/products', createConfig());
 				context.commit('SET_PRODUCTS', res.data.products);
 				context.commit('SET_PRODUCT_LOADING', false);
+			} catch (e) {
+				console.log(e);
+			}
+		},
+		async addToCart(context, product) {
+			try {
+				context.commit('ADD_TO_CART', product);
+				await context.dispatch('saveCartProduct');
+			} catch (e) {
+				console.log(e);
+			}
+		},
+		async saveCartProduct(context) {
+			try {
+				await axios.post(
+					'/api/v1/save-cart',
+					{ cart: context.state.cart },
+					createConfig()
+				);
 			} catch (e) {
 				console.log(e);
 			}
