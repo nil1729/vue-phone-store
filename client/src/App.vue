@@ -1,14 +1,21 @@
 <template>
   <div>
     <app-alert />
-    <router-view />
+    <app-page-loader v-if="loading" />
+    <router-view v-else />
   </div>
 </template>
 
 <script>
 import Alert from "./components/utils/Alerts";
+import PageLoader from "./components/layouts/PageLoader";
 export default {
   name: "App-Phone-Store",
+  computed: {
+    loading() {
+      return this.$store.state.pageLoading;
+    },
+  },
   watch: {
     "$store.state.user": function () {
       if (!this.$store.state.user) {
@@ -18,6 +25,7 @@ export default {
   },
   components: {
     "app-alert": Alert,
+    "app-page-loader": PageLoader,
   },
 };
 </script>

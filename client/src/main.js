@@ -18,6 +18,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 						type: 'loadUser',
 						data: user,
 					});
+				} else {
+					this.$store.commit('SET_PAGE_LOADING', false);
 				}
 			},
 			render: h => h(App),

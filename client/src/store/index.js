@@ -15,6 +15,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
 	state: {
+		pageLoading: true,
 		user: null,
 		errors: null,
 		products: null,
@@ -22,6 +23,9 @@ const store = new Vuex.Store({
 		productFetching: true,
 	},
 	mutations: {
+		SET_PAGE_LOADING(state, payload) {
+			state.pageLoading = payload;
+		},
 		SET_USER_STATE: function(state, user) {
 			state.user = user;
 		},
@@ -62,7 +66,8 @@ const store = new Vuex.Store({
 			}
 			context.commit('SET_USER_STATE', user.details);
 			context.commit('SET_CART_STATE', user.cart);
-			context.dispatch('fetchProducts');
+			await context.dispatch('fetchProducts');
+			context.commit('SET_PAGE_LOADING', false);
 		},
 		async userSignOut(context) {
 			localStorage.removeItem('authToken');
