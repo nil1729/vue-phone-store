@@ -96,6 +96,7 @@ export default {
         });
       }
       this.resetState();
+      this.$store.commit("SET_ERRORS", null);
       if (this.$route.query.redirect) {
         return this.$router.push(`/${this.$route.query.redirect}`);
       }

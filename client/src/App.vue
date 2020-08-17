@@ -26,4 +26,7 @@ export default {
 ::-webkit-scrollbar {
   width: 0;
 }
+body {
+  overflow-x: hidden;
+}
 </style>

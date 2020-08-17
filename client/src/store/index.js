@@ -14,6 +14,7 @@ const store = new Vuex.Store({
 	state: {
 		user: null,
 		errors: null,
+		products: null,
 	},
 	mutations: {
 		SET_USER_STATE: function(state, user) {
@@ -21,6 +22,9 @@ const store = new Vuex.Store({
 		},
 		SET_ERRORS(state, error) {
 			state.errors = error;
+		},
+		SET_PRODUCTS: function(state, products) {
+			state.products = products;
 		},
 	},
 	getters: {},
@@ -38,12 +42,30 @@ const store = new Vuex.Store({
 				);
 				user = res.data.user;
 			}
-			user.authToken = idToken;
+			localStorage.setItem('authToken', idToken);
 			context.commit('SET_USER_STATE', user);
 		},
 		async userSignOut(context) {
+			localStorage.removeItem('authToken');
 			await firebase.auth().signOut();
 			context.commit('SET_USER_STATE', null);
+		},
+		async fetchProducts(context) {
+			try {
+				if (!localStorage.authToken) {
+					return;
+				}
+				const config = {
+					headers: {
+						'Content-Type': 'application/json',
+						'x-auth-token': localStorage.getItem('authToken'),
+					},
+				};
+				const res = await axios.get('/api/v1/products', config);
+				context.commit('SET_PRODUCTS', res.data.products);
+			} catch (e) {
+				console.log(e);
+			}
 		},
 	},
 });

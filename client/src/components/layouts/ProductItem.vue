@@ -1,14 +1,14 @@
 <template>
   <div class="card" style="width: 18rem;">
     <div class="image">
-      <img src="https://i.insider.com/5e625eccfee23d0c3b666de8?width=1136&format=jpeg" alt />
+      <img :src="product && product.photoURL" alt />
       <button class="btn btn-primary cart-btn">
         <i class="fal fa-cart-arrow-down"></i>
       </button>
     </div>
     <div class="card-body d-flex justify-content-between align-items-center">
-      <p class="card-text lead mb-0">Google Pixel- Black</p>
-      <p class="card-text lead">$ 10</p>
+      <p class="card-text lead mb-0">{{product && product.model}}</p>
+      <p class="card-text lead">$ {{product && product.price}}</p>
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@
 <script>
 export default {
   name: "Product-Item",
+  props: ["product"],
 };
 </script>
 

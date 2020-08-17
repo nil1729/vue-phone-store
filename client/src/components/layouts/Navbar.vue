@@ -77,6 +77,9 @@ export default {
 </script>
 
 <style scoped>
+.navbar-brand {
+  margin-left: 2rem;
+}
 nav {
   background-color: #3f99ff;
 }

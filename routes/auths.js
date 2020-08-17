@@ -6,6 +6,11 @@ const admin = require('../config/admin');
 router.post('/login', async (req, res) => {
 	try {
 		const decodedToken = await admin.auth().verifyIdToken(req.body.idToken);
+		if (decodedToken.name) {
+			return res.status(200).json({
+				msg: 'Already Registered',
+			});
+		}
 		const displayName = uniqueNamesGenerator({
 			dictionaries: [names, names],
 			length: 2,
