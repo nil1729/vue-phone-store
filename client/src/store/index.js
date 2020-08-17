@@ -38,6 +38,7 @@ const store = new Vuex.Store({
 				);
 				user = res.data.user;
 			}
+			user.authToken = idToken;
 			context.commit('SET_USER_STATE', user);
 		},
 		async userSignOut(context) {
