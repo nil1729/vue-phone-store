@@ -96,6 +96,9 @@ const store = new Vuex.Store({
 		},
 		async fetchProducts(context, page) {
 			try {
+				if (context.state.products && context.state.products.current === page) {
+					return;
+				}
 				context.commit('SET_PRODUCT_LOADING', true);
 				if (!localStorage.authToken) {
 					return;

@@ -3,6 +3,7 @@ import Home from '@/components/pages/Home.vue';
 import Cart from '@/components/pages/cart.vue';
 import Products from '@/components/pages/Products.vue';
 import Profile from '@/components/pages/Profile.vue';
+import AddProduct from '@/components/pages/addProduct.vue';
 const routes = [
 	{
 		name: 'Authenticatiion',
@@ -28,6 +29,11 @@ const routes = [
 				path: '/profile',
 				name: 'Profile',
 				component: Profile,
+			},
+			{
+				path: '/admin/add-product',
+				name: 'Admin-Add-Product',
+				component: AddProduct,
 			},
 		],
 		path: '/',

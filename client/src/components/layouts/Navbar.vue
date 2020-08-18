@@ -1,8 +1,8 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <router-link to="/" class="text-light navbar-brand">
+    <div class="text-light navbar-brand">
       <i class="fad fa-2x fa-phone-office"></i>
-    </router-link>
+    </div>
     <!-- <button class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
     </button>-->
@@ -15,6 +15,12 @@
     </div>
     <div class="ml-auto">
       <ul class="navbar-nav mr-auto ml-5 align-items-center">
+        <li v-if="$store.state.isAdmin" class="nav-item">
+          <router-link to="/admin/add-product" type="button" class="btn mr-2 btn-info" id="add-btn">
+            <i class="fal fa-plus"></i>
+            Add Product
+          </router-link>
+        </li>
         <li class="nav-item">
           <router-link to="/cart" type="button" class="btn" id="cart-btn">
             <i class="fas fa-cart-plus"></i>
@@ -99,15 +105,20 @@ nav {
   left: -7rem;
   top: 2.5rem;
 }
+.btn {
+  box-shadow: none !important;
+}
 #cart-btn {
   border: 1.5px solid rgb(218, 208, 208);
   color: rgb(250, 250, 250);
 }
-#cart-btn i {
+#cart-btn i,
+#add-btn i {
   font-size: 1.3rem;
   margin-right: 5px;
 }
-#cart-btn {
+#cart-btn,
+#add-btn {
   font-size: 1.1rem;
 }
 #user-dp {

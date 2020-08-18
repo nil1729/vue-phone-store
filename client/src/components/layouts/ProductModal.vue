@@ -7,8 +7,8 @@
       </div>
       <p class="lead my-2 text-info">{{product.model}}</p>
       <p class="lead text-danger">
-        Price:
-        <span class="text-muted">${{product.price}}</span>
+        Price{{' '}}
+        <span class="text-muted">₹ {{product.price}}</span>
       </p>
       <button @click="handleClose('close')" class="btn btn-outline-primary">Continue Shopping</button>
       <br />
@@ -55,9 +55,6 @@ export default {
 }
 .lead {
   font-weight: 500;
-}
-.text-muted {
-  font-weight: 300;
 }
 button {
   box-shadow: none !important;

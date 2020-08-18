@@ -22,7 +22,7 @@
               </div>
             </th>
             <td>{{ item.model }}</td>
-            <td class="price">${{item.price}}</td>
+            <td class="price">₹ {{item.price}}</td>
             <td>
               <div class="btn-group" role="group" aria-label="Basic example">
                 <button
@@ -45,7 +45,7 @@
                 <i class="fad fa-trash"></i>
               </button>
             </td>
-            <td class="price">${{item.price * item.quantity}}</td>
+            <td class="price">₹ {{item.price * item.quantity}}</td>
           </tr>
         </tbody>
       </table>
@@ -56,17 +56,17 @@
         >Clear Cart</button>
         <p class="lead text-primary">
           Product Total :
-          <span class="ml-2 font-weight-normal text-dark">${{productTotal}}</span>
+          <span class="ml-2 font-weight-normal text-dark">₹ {{productTotal}}</span>
         </p>
         <p class="lead text-primary">
           Tax (GST 5%) :
-          <span class="ml-2 font-weight-normal text-dark">${{taxTotal}}</span>
+          <span class="ml-2 font-weight-normal text-dark">₹ {{taxTotal}}</span>
         </p>
         <p class="lead text-primary">
           Grand Total :
           <span
             class="ml-2 font-weight-normal text-dark"
-          >${{(taxTotal + productTotal).toFixed(2)}}</span>
+          >₹ {{(taxTotal + productTotal).toFixed(2)}}</span>
         </p>
         <button @click="testCheckout" class="btn mt-1 mb-4 btn-success">
           Proceed to Checkout
