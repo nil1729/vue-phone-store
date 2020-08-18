@@ -11,6 +11,11 @@ const questions = [
 		message: 'Admin Email Address',
 	},
 	{
+		type: 'input',
+		name: 'phoneNumber',
+		message: 'Admin Phone Number',
+	},
+	{
 		type: 'password',
 		name: 'password',
 		message: 'Admin Password',

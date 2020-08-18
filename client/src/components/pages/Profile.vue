@@ -1,9 +1,9 @@
 <template>
   <div class="container mt-3">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4 dp-col">
         <div class="image m-auto">
-          <img :src="user && user.photoURL" :alt="user && user.displayName" />
+          <img class="img-fluid" :src="user && user.photoURL" :alt="user && user.displayName" />
         </div>
       </div>
       <div class="col-md-8 bg-light p-4">
@@ -15,7 +15,7 @@
             </tr>
             <tr>
               <th scope="row">Phone Number</th>
-              <td class="text-danger">{{ user && user.phoneNumber }}</td>
+              <td class="text-danger">{{ user && user.phoneNumber ? user.phoneNumber : 'Null' }}</td>
             </tr>
             <tr>
               <th scope="row">Email Address</th>
@@ -41,13 +41,16 @@ export default {
   name: "Profile-Page",
   computed: {
     user() {
-      return { ...this.$store.state.user, phoneNumber: "Null" };
+      return { ...this.$store.state.user };
     },
   },
 };
 </script>
 
 <style scoped>
+.dp-col {
+  display: contents;
+}
 .image {
   height: 12rem;
   width: 12rem;

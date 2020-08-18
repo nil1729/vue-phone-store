@@ -13,13 +13,31 @@ const main = async () => {
 		.command('add')
 		.alias('a')
 		.action(async () => {
-			const answers = await prompt(questions);
+			const { email, displayName, phoneNumber, password } = await prompt(
+				questions
+			);
 			console.log('\n\nNew Admin is Creating ....\n');
-			const newAdmin = await firebaseAdmin
-				.auth()
-				.createUser({ ...answers, photoURL });
-			await firebaseAdmin.auth().createCustomToken(newAdmin.uid, adminClaim);
-			console.log('Admin Created');
+			try {
+				let newAdmin = await firebaseAdmin
+					.auth()
+					.createUser({ email, password, displayName, photoURL });
+				await firebaseAdmin.auth().createCustomToken(newAdmin.uid, adminClaim);
+				await firebaseAdmin
+					.firestore()
+					.collection('users')
+					.doc(newAdmin.uid)
+					.set({
+						cart: [],
+						details: {
+							id: newAdmin.uid,
+							...newAdmin.providerData[0],
+							phoneNumber: phoneNumber,
+						},
+					});
+				console.log('Admin Created');
+			} catch (e) {
+				console.log(e);
+			}
 			process.exit(1);
 		});
 	program.parseAsync(process.argv);
