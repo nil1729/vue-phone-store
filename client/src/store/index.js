@@ -58,6 +58,9 @@ const store = new Vuex.Store({
 				else return item;
 			});
 		},
+		CLEAR_CART: function(state) {
+			state.cart = [];
+		},
 	},
 	getters: {},
 	actions: {

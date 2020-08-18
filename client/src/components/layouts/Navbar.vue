@@ -1,13 +1,13 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <router-link to="/" class="navbar-brand">
-      <i class="fas fa-2x fa-phone-office"></i>
+    <router-link to="/" class="text-light navbar-brand">
+      <i class="fad fa-2x fa-phone-office"></i>
     </router-link>
     <!-- <button class="navbar-toggler" type="button">
       <span class="navbar-toggler-icon"></span>
     </button>-->
     <div>
-      <ul class="navbar-nav mr-auto ml-5">
+      <ul class="navbar-nav mr-auto ml-3">
         <router-link tag="li" to="/" exact class="nav-item active">
           <a class="nav-link lead">Phone Store</a>
         </router-link>

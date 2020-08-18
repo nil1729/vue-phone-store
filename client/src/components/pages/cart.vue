@@ -49,6 +49,30 @@
           </tr>
         </tbody>
       </table>
+      <div class="container d-flex justify-content-center align-items-end flex-column">
+        <button
+          @click="$store.commit('CLEAR_CART')"
+          class="btn btn-outline-danger btn-sm mb-2 clear-cart-btn"
+        >Clear Cart</button>
+        <p class="lead text-primary">
+          Product Total :
+          <span class="ml-2 font-weight-normal text-muted">${{productTotal}}</span>
+        </p>
+        <p class="lead text-primary">
+          Tax (GST 5%) :
+          <span class="ml-2 font-weight-normal text-muted">${{taxTotal}}</span>
+        </p>
+        <p class="lead text-primary">
+          Grand Total :
+          <span
+            class="ml-2 font-weight-normal text-muted"
+          >${{(taxTotal + productTotal).toFixed(2)}}</span>
+        </p>
+        <button @click="testCheckout" class="btn mt-1 mb-4 btn-success">
+          Proceed to Checkout
+          <i class="ml-1 fal fa-shopping-cart"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -63,6 +87,16 @@ export default {
     cartItems: function () {
       return this.$store.state.cart;
     },
+    productTotal() {
+      let total = 0;
+      this.$store.state.cart.forEach(
+        (item) => (total += item.price * item.quantity)
+      );
+      return parseFloat(total.toFixed(2));
+    },
+    taxTotal() {
+      return parseFloat(((this.productTotal * 5) / 100).toFixed(2));
+    },
   },
   methods: {
     remove(id) {
@@ -71,6 +105,14 @@ export default {
     changeQuantity(id, quantity) {
       this.$store.commit("CHANGE_ITEM_QUANTITY", { id, quantity });
     },
+    // TODO only for Development
+    testCheckout() {
+      if (confirm("Do you Want to Proceed ?")) {
+        alert("Successfully Purchased");
+        this.$store.commit("CLEAR_CART");
+      }
+    },
+    // Todo: Change this with Backend
   },
   beforeRouteLeave(to, from, next) {
     this.$store.dispatch("saveCartProduct");
@@ -88,7 +130,10 @@ cart-text {
   border-bottom: 1px solid grey;
   width: fit-content;
 }
-.table th {
+table {
+  border-bottom: 1px solid #dee2e6;
+}
+.table thead th {
   border-top: none;
 }
 .table th,
@@ -111,7 +156,15 @@ img {
 button {
   box-shadow: none !important;
 }
+.clear-cart-btn {
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
 .trash {
   color: red;
+}
+.lead {
+  font-weight: 500;
 }
 </style>
