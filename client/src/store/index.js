@@ -151,8 +151,17 @@ const store = new Vuex.Store({
 					'fileUploadToStorage',
 					product.file
 				);
-				console.log(photoURL);
+				const dbProduct = {
+					...product.info,
+					photoURL,
+				};
+				const res = await axios.post(
+					'/api/v1/admin/add-product',
+					dbProduct,
+					createConfig()
+				);
 				context.commit('SET_PRODUCT_UPLOADING', false);
+				context.commit('SET_ERRORS', res.data);
 			} catch (e) {
 				console.log(e);
 			}

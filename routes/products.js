@@ -42,4 +42,27 @@ router.post('/save-cart', verifyAuth, async (req, res) => {
 	}
 });
 
+router.post('/admin/add-product', verifyAuth, async (req, res) => {
+	try {
+		if (!req.siteAdmin) {
+			return res.status(403).json({
+				msg: 'Unauthorized Access',
+			});
+		}
+		const docSnap = await admin
+			.firestore()
+			.collection('products')
+			.add(req.body);
+		return res.json({
+			code: 'Server Notification',
+			message: 'Product Details Uploaded Successfully',
+		});
+	} catch (e) {
+		console.log(e);
+		return res.status(500).json({
+			msg: 'Server error',
+		});
+	}
+});
+
 module.exports = router;
