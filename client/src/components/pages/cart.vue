@@ -56,16 +56,16 @@
         >Clear Cart</button>
         <p class="lead text-primary">
           Product Total :
-          <span class="ml-2 font-weight-normal text-muted">${{productTotal}}</span>
+          <span class="ml-2 font-weight-normal text-dark">${{productTotal}}</span>
         </p>
         <p class="lead text-primary">
           Tax (GST 5%) :
-          <span class="ml-2 font-weight-normal text-muted">${{taxTotal}}</span>
+          <span class="ml-2 font-weight-normal text-dark">${{taxTotal}}</span>
         </p>
         <p class="lead text-primary">
           Grand Total :
           <span
-            class="ml-2 font-weight-normal text-muted"
+            class="ml-2 font-weight-normal text-dark"
           >${{(taxTotal + productTotal).toFixed(2)}}</span>
         </p>
         <button @click="testCheckout" class="btn mt-1 mb-4 btn-success">
