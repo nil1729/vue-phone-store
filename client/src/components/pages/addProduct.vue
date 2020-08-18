@@ -52,7 +52,7 @@
               class="form-control"
               placeholder="99.99"
             />
-            <div class="invalid-feedback">Price should be a Number</div>
+            <div class="invalid-feedback">Price should be a Number greater than zero</div>
           </div>
         </div>
         <div class="form-group col-md-6">
@@ -94,7 +94,7 @@ export default {
       if (this.price === "") {
         return null;
       }
-      return validator.isNumeric(this.price);
+      return validator.isNumeric(this.price) && this.price > 0;
     },
     isModel() {
       if (this.model === "") {
@@ -130,12 +130,32 @@ export default {
     }
   },
   methods: {
-    async handleSubmit() {},
+    async handleSubmit() {
+      const product = {
+        info: {
+          model: validator.ltrim(this.model),
+          brand: validator.ltrim(this.brand),
+          description: validator.ltrim(this.description),
+          price: parseFloat(parseFloat(this.price).toFixed(2)),
+        },
+        file: this.file,
+      };
+      await this.$store.dispatch("addAdminProducts", product);
+      this.resetForm();
+    },
+    resetForm() {
+      this.model = "";
+      this.brand = "";
+      this.price = "";
+      this.description = "";
+      this.file = null;
+      this.fileName = "Choose a File";
+    },
     setFile(e) {
       const fileType = new RegExp("image", "i");
       const newFile = e.target.files[0];
       if (!fileType.test(newFile.type)) {
-        e.target.form.reset();
+        // e.target.form.reset();
         this.file = null;
         this.fileName = "Choose a File";
         return this.$store.commit("SET_ERRORS", {

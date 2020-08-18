@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center">
+  <div v-if="loading" class="container d-flex justify-content-center align-items-center">
     <div class="modal-box text-center">
       <h5 class="font-weight-normal">Product Details is Uploading ...</h5>
       <img class="my-3" src="@/assets/backdrop.gif" alt />
@@ -10,6 +10,11 @@
 <script>
 export default {
   name: "File-Upload-Loader",
+  computed: {
+    loading() {
+      return this.$store.state.productUploading;
+    },
+  },
 };
 </script>
 

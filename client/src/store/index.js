@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import crypto from 'crypto';
+import path from 'path';
 import firebase from '@/firebase';
 import axios from 'axios';
 const createConfig = () => {
@@ -23,6 +25,7 @@ const store = new Vuex.Store({
 		cart: null,
 		productAddAlert: null,
 		productFetching: true,
+		productUploading: false,
 	},
 	mutations: {
 		SET_ADMIN(state, status) {
@@ -67,6 +70,9 @@ const store = new Vuex.Store({
 		},
 		CLEAR_CART: function(state) {
 			state.cart = [];
+		},
+		SET_PRODUCT_UPLOADING(state, payload) {
+			state.productUploading = payload;
 		},
 	},
 	getters: {},
@@ -134,6 +140,38 @@ const store = new Vuex.Store({
 					{ cart: context.state.cart },
 					createConfig()
 				);
+			} catch (e) {
+				console.log(e);
+			}
+		},
+		async addAdminProducts(context, product) {
+			try {
+				context.commit('SET_PRODUCT_UPLOADING', true);
+				const photoURL = await context.dispatch(
+					'fileUploadToStorage',
+					product.file
+				);
+				console.log(photoURL);
+				context.commit('SET_PRODUCT_UPLOADING', false);
+			} catch (e) {
+				console.log(e);
+			}
+		},
+		async fileUploadToStorage(context, file) {
+			try {
+				const storage = firebase.storage();
+				const extName = path.extname(file.name);
+				const fileOnlyName = crypto
+					.randomBytes(15)
+					.toString('hex')
+					.toUpperCase();
+				const storageRef = storage.ref(`uploads/${fileOnlyName}${extName}`);
+				const metadata = {
+					contentType: `${file.type}`,
+				};
+				await storageRef.put(file, metadata);
+				const downloadURL = await storageRef.getDownloadURL();
+				return downloadURL;
 			} catch (e) {
 				console.log(e);
 			}
