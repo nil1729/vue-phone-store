@@ -20,6 +20,7 @@ const store = new Vuex.Store({
 		errors: null,
 		products: null,
 		cart: null,
+		productAddAlert: null,
 		productFetching: true,
 	},
 	mutations: {
@@ -44,6 +45,9 @@ const store = new Vuex.Store({
 		ADD_TO_CART: function(state, product) {
 			product.quantity = 1;
 			state.cart.push(product);
+		},
+		CART_NOTIFICATION: function(state, product) {
+			state.productAddAlert = product;
 		},
 		REMOVE_CART_ITEM: function(state, id) {
 			state.cart = state.cart.filter(item => item.id !== id);
@@ -103,6 +107,7 @@ const store = new Vuex.Store({
 				if (!hasAlready) {
 					context.commit('ADD_TO_CART', product);
 					await context.dispatch('saveCartProduct');
+					context.commit('CART_NOTIFICATION', product);
 				}
 			} catch (e) {
 				console.log(e);

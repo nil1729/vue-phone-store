@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <router-link to="/" class="navbar-brand">
       <i class="fas fa-2x fa-phone-office"></i>
     </router-link>
@@ -81,6 +81,9 @@ export default {
 </script>
 
 <style scoped>
+.sticky-top {
+  z-index: 97;
+}
 .navbar-brand {
   margin-left: 2rem;
 }
