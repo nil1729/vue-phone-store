@@ -7,7 +7,7 @@
         <p v-else class="lead mb-0">In Cart</p>
       </button>
     </div>
-    <div class="card-body d-flex justify-content-between align-items-center">
+    <div class="card-body d-flex justify-content-between align-items-center border-top">
       <p class="card-text lead mb-0">{{product && product.model}}</p>
       <p class="card-text lead">$ {{product && product.price}}</p>
     </div>
@@ -84,5 +84,6 @@ export default {
 }
 .card-body .lead {
   font-weight: 500;
+  font-size: 1rem;
 }
 </style>

@@ -71,21 +71,24 @@ const store = new Vuex.Store({
 			}
 			context.commit('SET_USER_STATE', user.details);
 			context.commit('SET_CART_STATE', user.cart);
-			await context.dispatch('fetchProducts');
 			context.commit('SET_PAGE_LOADING', false);
+			await context.dispatch('fetchProducts', 1);
 		},
 		async userSignOut(context) {
 			localStorage.removeItem('authToken');
 			await firebase.auth().signOut();
 			context.commit('SET_USER_STATE', null);
 		},
-		async fetchProducts(context) {
+		async fetchProducts(context, page) {
 			try {
 				context.commit('SET_PRODUCT_LOADING', true);
 				if (!localStorage.authToken) {
 					return;
 				}
-				const res = await axios.get('/api/v1/products', createConfig());
+				const res = await axios.get(
+					`/api/v1/products?page=${page}`,
+					createConfig()
+				);
 				context.commit('SET_PRODUCTS', res.data.products);
 				context.commit('SET_PRODUCT_LOADING', false);
 			} catch (e) {

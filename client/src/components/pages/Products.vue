@@ -8,17 +8,19 @@
       <div v-for="item in products" :key="item.id" class="col-md-3 mb-4">
         <app-product-item :product="item" />
       </div>
+      <app-pagination-block />
     </div>
   </div>
 </template>
 
 <script>
 import ProductItem from "../layouts/ProductItem";
+import Pagination from "../utils/Pagination";
 export default {
   name: "Product",
   computed: {
     products() {
-      return this.$store.state.products;
+      return this.$store.state.products.results;
     },
     loading() {
       return this.$store.state.productFetching;
@@ -26,6 +28,7 @@ export default {
   },
   components: {
     "app-product-item": ProductItem,
+    "app-pagination-block": Pagination,
   },
 };
 </script>

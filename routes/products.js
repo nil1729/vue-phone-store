@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const verifyAuth = require('../middleware/auth');
 const admin = require('../config/admin');
+const paginate = require('../middleware/paginate');
 
 //TODO Just for Testing
 const { products } = require('../data');
 
-router.get('/products', verifyAuth, async (req, res) => {
+router.get('/products', [verifyAuth, paginate(products)], async (req, res) => {
 	try {
 		if (!req.authID) {
 			return res.status(400).json({
@@ -14,7 +15,7 @@ router.get('/products', verifyAuth, async (req, res) => {
 			});
 		}
 		return res.json({
-			products,
+			products: req.paginatedResults,
 		});
 	} catch (e) {
 		return res.status(500).json({
