@@ -59,7 +59,7 @@
           <label>Preview Image</label>
           <div class="input-group">
             <div class="custom-file">
-              <input @change="setFile" required type="file" class="custom-file-input" />
+              <input @change="setFile" :name="file" required type="file" class="custom-file-input" />
               <label class="custom-file-label">{{fileName}}</label>
             </div>
           </div>
@@ -132,8 +132,19 @@ export default {
   methods: {
     async handleSubmit() {},
     setFile(e) {
-      this.file = e.target.files[0];
-      this.fileName = this.file.name;
+      const fileType = new RegExp("image", "i");
+      const newFile = e.target.files[0];
+      if (!fileType.test(newFile.type)) {
+        e.target.form.reset();
+        this.file = null;
+        this.fileName = "Choose a File";
+        return this.$store.commit("SET_ERRORS", {
+          code: "Validation Error",
+          message: "The File you are choosing is not an Image",
+        });
+      }
+      this.file = newFile;
+      this.fileName = newFile.name;
     },
   },
 };

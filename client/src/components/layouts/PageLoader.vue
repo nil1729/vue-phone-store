@@ -15,7 +15,7 @@ export default {
   position: absolute;
   height: 100%;
   width: 100%;
-  z-index: 99;
+  z-index: 200;
   background-color: white;
   max-width: none;
 }

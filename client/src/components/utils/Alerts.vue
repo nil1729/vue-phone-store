@@ -37,7 +37,7 @@ export default {
   position: absolute;
   right: -5%;
   top: 5%;
-  z-index: 19;
+  z-index: 100;
   max-width: 300px;
   transition: all ease-in 0.2s;
 }
