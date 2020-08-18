@@ -32,7 +32,7 @@ router.get('/register', verifyAuth, async (req, res) => {
 		};
 		await admin.firestore().collection('users').doc(req.authID).set(user);
 		return res.json({
-			user,
+			user: { ...user, siteAdmin: req.siteAdmin },
 		});
 	} catch (e) {
 		console.log(e);
@@ -50,7 +50,7 @@ router.get('/login', verifyAuth, async (req, res) => {
 			.doc(req.authID)
 			.get();
 		return res.json({
-			user: docSnap.data(),
+			user: { ...docSnap.data(), siteAdmin: req.siteAdmin },
 		});
 	} catch (e) {
 		console.log(e);

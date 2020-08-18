@@ -16,6 +16,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
 	state: {
 		pageLoading: true,
+		isAdmin: false,
 		user: null,
 		errors: null,
 		products: null,
@@ -24,11 +25,17 @@ const store = new Vuex.Store({
 		productFetching: true,
 	},
 	mutations: {
+		SET_ADMIN(state, status) {
+			state.isAdmin = status;
+		},
 		SET_PAGE_LOADING(state, payload) {
 			state.pageLoading = payload;
 		},
 		SET_USER_STATE: function(state, user) {
 			state.user = user;
+			if (!user) {
+				state.isAdmin = false;
+			}
 		},
 		SET_CART_STATE: function(state, cart) {
 			state.cart = cart;
@@ -76,6 +83,7 @@ const store = new Vuex.Store({
 				let res = await axios.get('/api/v1/login', createConfig());
 				user = res.data.user;
 			}
+			context.commit('SET_ADMIN', user.siteAdmin);
 			context.commit('SET_USER_STATE', user.details);
 			context.commit('SET_CART_STATE', user.cart);
 			context.commit('SET_PAGE_LOADING', false);

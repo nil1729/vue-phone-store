@@ -11,6 +11,7 @@ module.exports = async (req, res, next) => {
 		const decodedToken = await admin.auth().verifyIdToken(token);
 		req.authID = decodedToken.uid;
 		req.token = decodedToken;
+		req.siteAdmin = decodedToken.siteAdmin || false;
 		next();
 	} catch (e) {
 		return res.status(403).json({

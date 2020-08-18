@@ -21,7 +21,9 @@ const main = async () => {
 				let newAdmin = await firebaseAdmin
 					.auth()
 					.createUser({ email, password, displayName, photoURL });
-				await firebaseAdmin.auth().createCustomToken(newAdmin.uid, adminClaim);
+				await firebaseAdmin
+					.auth()
+					.setCustomUserClaims(newAdmin.uid, adminClaim);
 				await firebaseAdmin
 					.firestore()
 					.collection('users')
