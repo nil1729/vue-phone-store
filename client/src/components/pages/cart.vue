@@ -15,10 +15,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in cartItems" :key="item.id">
+          <tr v-for="item in cartItems" :key="item._id">
             <th scope="row">
               <div class="image">
-                <img :src="item.photoURL" alt="item.id" class="img-thumbnail img-fluid" />
+                <img :src="item.photoURL" :alt="item._id" class="img-thumbnail img-fluid" />
               </div>
             </th>
             <td>{{ item.model }}</td>
@@ -41,7 +41,7 @@
               </div>
             </td>
             <td>
-              <button @click="remove(item.id)" class="btn btn-lg trash">
+              <button @click="remove(item._id)" class="btn btn-lg trash">
                 <i class="fad fa-trash"></i>
               </button>
             </td>
@@ -127,8 +127,8 @@ export default {
 
 <style scoped>
 .cart-empty-text,
-cart-text {
-  font-weight: 500;
+.cart-text {
+  font-weight: 400;
 }
 .cart-text {
   border-bottom: 1px solid grey;
