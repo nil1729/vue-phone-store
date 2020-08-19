@@ -15,6 +15,13 @@ app.use(express.json());
 app.use('/api/v1', auths);
 app.use('/api/v1', products);
 
+if (process.env.NODE_ENV === 'production') {
+	app.use(express.static(__dirname + '/public'));
+	app.get('*', async (req, res) => {
+		res.sendFile(__dirname + '/public/index.html');
+	});
+}
+
 app.listen(PORT, () => {
 	console.log(`Server started on port ${PORT}`);
 });
