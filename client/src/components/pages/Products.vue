@@ -5,7 +5,11 @@
       <img src="@/assets/search.gif" alt="Loader" />
     </div>
     <div v-else class="row mb-3">
-      <div v-for="item in products" :key="item._id" class="col-md-3 mb-4">
+      <div
+        v-for="item in products"
+        :key="item._id"
+        class="col-xl-3 col-lg-4 col-md-6 col-xs-12 mb-4"
+      >
         <app-product-item :product="item" />
       </div>
       <app-pagination-block />

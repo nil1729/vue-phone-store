@@ -30,8 +30,10 @@ export default {
   methods: {
     handleClose(type) {
       this.$store.commit("CART_NOTIFICATION", null);
-      if (type === "go-cart") {
+      if (type === "go-cart" && this.$route.name !== "Cart") {
         return this.$router.push("/cart");
+      } else if (this.$route.name !== "Products") {
+        return this.$router.push("/");
       }
     },
   },
