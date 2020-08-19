@@ -13,7 +13,7 @@
           placeholder="Enter email"
           v-model="email"
           @keyup="checkEmail"
-          :class="[{'border-danger': emailValid!=='valid' && emailValid}, {'border-success': emailValid}]"
+          :class="[{'is-invalid': emailValid!=='valid' && emailValid}, {'is-valid': emailValid}]"
         />
         <small
           id="emailHelp"
