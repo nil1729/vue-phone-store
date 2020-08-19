@@ -4,6 +4,8 @@ import Cart from '@/components/pages/cart.vue';
 import Products from '@/components/pages/Products.vue';
 import Profile from '@/components/pages/Profile.vue';
 import AddProduct from '@/components/pages/addProduct.vue';
+import NotFound from '@/components/pages/NotFound.vue';
+
 const routes = [
 	{
 		name: 'Authenticatiion',
@@ -14,6 +16,7 @@ const routes = [
 		},
 	},
 	{
+		path: '/',
 		children: [
 			{
 				path: '/cart',
@@ -35,8 +38,12 @@ const routes = [
 				name: 'Admin-Add-Product',
 				component: AddProduct,
 			},
+			{
+				path: '*',
+				name: 'NotFound',
+				component: NotFound,
+			},
 		],
-		path: '/',
 		meta: {
 			requiresAuth: true,
 		},
