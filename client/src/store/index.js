@@ -75,7 +75,16 @@ const store = new Vuex.Store({
 			state.productUploading = payload;
 		},
 	},
-	getters: {},
+	getters: {
+		formatPrice: () => price => {
+			var format = new Intl.NumberFormat('en-IN', {
+				style: 'currency',
+				currency: 'INR',
+				minimumFractionDigits: 2,
+			});
+			return format.format(price).substr(1);
+		},
+	},
 	actions: {
 		async userAuthenticate(context, { type, data }) {
 			let user = { ...data.providerData[0] };

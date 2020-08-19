@@ -9,16 +9,18 @@
     </div>
     <div class="card-body d-flex justify-content-between align-items-center border-top">
       <p class="card-text lead mb-0">{{product && product.model}}</p>
-      <p class="card-text lead">₹ {{product && product.price}}</p>
+      <p class="card-text lead">₹ {{product && formatPrice(product.price)}}</p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "Product-Item",
   props: ["product"],
   computed: {
+    ...mapGetters(["formatPrice"]),
     hasCarted() {
       if (this.$store.state.cart) {
         let index = this.$store.state.cart.findIndex(

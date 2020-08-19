@@ -8,7 +8,7 @@
       <p class="lead my-2 text-info">{{product.model}}</p>
       <p class="lead text-danger">
         Price{{' '}}
-        <span class="text-muted">₹ {{product.price}}</span>
+        <span class="text-muted">₹ {{formatPrice(product.price)}}</span>
       </p>
       <button @click="handleClose('close')" class="btn btn-outline-primary">Continue Shopping</button>
       <br />
@@ -18,9 +18,11 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "app-product-model",
   computed: {
+    ...mapGetters(["formatPrice"]),
     product() {
       return this.$store.state.productAddAlert;
     },
