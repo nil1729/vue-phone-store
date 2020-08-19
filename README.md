@@ -23,4 +23,13 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
 
 ## <img src="./preview.png" alt="Nilanjan Deb">
 
+---
+
+#### TODO
+
+1. Newly added Product is not directly added to Product Page
+2. Payment Method hasn't been implemented yet.
+
+---
+
 <p style="text-align: center;">Made With<span style="color: red;"> &#10084; </span>by <a href="https://github.com/nil1729" target="_blank"> Nilanjan Deb </a> </p>
