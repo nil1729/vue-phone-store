@@ -42,6 +42,28 @@ router.get('/register', verifyAuth, async (req, res) => {
 	}
 });
 
+router.post('/google-register', verifyAuth, async (req, res) => {
+	try {
+		const user = {
+			details: {
+				id: req.authID,
+				...req.body.user,
+				phoneNumber: null,
+			},
+			cart: [],
+		};
+		await admin.firestore().collection('users').doc(req.authID).set(user);
+		return res.json({
+			user: { ...user, siteAdmin: req.siteAdmin },
+		});
+	} catch (e) {
+		console.log(e);
+		return res.status(400).json({
+			msg: 'Invalid Credentials',
+		});
+	}
+});
+
 router.get('/login', verifyAuth, async (req, res) => {
 	try {
 		const docSnap = await admin

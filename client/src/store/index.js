@@ -90,9 +90,15 @@ const store = new Vuex.Store({
 			let user = { ...data.providerData[0] };
 			const idToken = await firebase.auth().currentUser.getIdToken(true);
 			localStorage.setItem('authToken', idToken);
-			user.id = data.uid;
 			if (type === 'register') {
 				let res = await axios.get('/api/v1/register', createConfig());
+				user = res.data.user;
+			} else if (type === 'google-register') {
+				let res = await axios.post(
+					'/api/v1/google-register',
+					{ user },
+					createConfig()
+				);
 				user = res.data.user;
 			} else {
 				let res = await axios.get('/api/v1/login', createConfig());

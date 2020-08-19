@@ -23,7 +23,7 @@
             </tr>
             <tr>
               <th scope="row">Sign in Method</th>
-              <td class="text-capitalize">{{ user && user.providerId }}</td>
+              <td class="text-capitalize">{{ user && user.providerId.split('.')[0] }}</td>
             </tr>
             <tr>
               <th scope="row">Static User ID</th>
@@ -62,5 +62,8 @@ table th,
 table td {
   border-top: none;
   border-bottom: 1px solid #dee2e6;
+}
+img {
+  border-radius: 50%;
 }
 </style>

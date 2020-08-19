@@ -35,7 +35,7 @@
         <button
           type="submit"
           :disabled="submitted"
-          class="btn btn-sm btn-primary"
+          class="btn btn-sm btn-danger"
         >{{ submitted ? 'Loading ...' : mode === 'login' ? 'Login' : 'Register' }}</button>
         <button
           @click="changeMode"
@@ -44,12 +44,18 @@
         >Switch to {{ mode === 'login' ? 'Register' : 'Login' }}</button>
       </div>
     </form>
+    <h5 class="text-center text-dark mb-3">OR</h5>
+    <div class="form-group text-center">
+      <button @click="handleGoogleLogin" type="button" class="btn btn-primary mx-2 g-sign-btn">
+        <i class="fab fa-google mr-2"></i>Sign in With Google
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import validator from "validator";
-import firebase from "@/firebase";
+import firebase, { Provider } from "@/firebase";
 export default {
   name: "Authentication",
   data() {
@@ -96,11 +102,7 @@ export default {
         });
       }
       this.resetState();
-      this.$store.commit("SET_ERRORS", null);
-      if (this.$route.query.redirect) {
-        return this.$router.push(`/${this.$route.query.redirect}`);
-      }
-      this.$router.push("/");
+      this.routeChange();
     },
     changeMode() {
       this.mode = this.mode === "login" ? "register" : "login";
@@ -110,6 +112,13 @@ export default {
       this.email = "";
       this.password = "";
       this.submitted = false;
+    },
+    routeChange() {
+      this.$store.commit("SET_ERRORS", null);
+      if (this.$route.query.redirect) {
+        return this.$router.push(`/${this.$route.query.redirect}`);
+      }
+      this.$router.push("/");
     },
     checkEmail() {
       let validTest = validator.isEmail(this.email);
@@ -122,6 +131,29 @@ export default {
       }
       this.emailValid = "valid";
     },
+    async handleGoogleLogin() {
+      try {
+        const res = await firebase.auth().signInWithPopup(Provider);
+        let userMetadata = res.user.metadata;
+        if (userMetadata.a === userMetadata.b) {
+          await this.$store.dispatch("userAuthenticate", {
+            type: "google-register",
+            data: res.user,
+          });
+        } else {
+          await this.$store.dispatch("userAuthenticate", {
+            type: "login",
+            data: res.user,
+          });
+        }
+        this.routeChange();
+      } catch (e) {
+        return this.$store.commit("SET_ERRORS", {
+          code: e.code,
+          message: e.message,
+        });
+      }
+    },
   },
 };
 </script>
@@ -132,6 +164,7 @@ export default {
     width: 50%;
   }
 }
+button,
 input {
   box-shadow: none !important;
 }
@@ -143,6 +176,11 @@ input {
   font-weight: 100;
   font-size: 1em;
   letter-spacing: 0.5px;
-  box-shadow: none !important;
+}
+.g-sign-btn {
+  letter-spacing: 1px;
+}
+.g-sign-btn i {
+  font-size: 1.1rem;
 }
 </style>
