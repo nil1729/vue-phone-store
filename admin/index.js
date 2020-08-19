@@ -1,6 +1,6 @@
 const { program } = require('commander');
 const { prompt, questions } = require('./question');
-const firebaseAdmin = require('../../config/admin');
+const firebaseAdmin = require('../config/admin');
 const photoURL =
 	'https://www.logolynx.com/images/logolynx/23/23938578fb8d88c02bc59906d12230f3.png';
 const adminClaim = {
