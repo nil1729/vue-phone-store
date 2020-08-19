@@ -8,7 +8,8 @@ const questions = [
 	{
 		type: 'input',
 		name: 'email',
-		message: 'Admin Email Address',
+		message:
+			'Admin Email Address (Please use Custom Email Address eg. admin@store.com)',
 	},
 	{
 		type: 'input',

@@ -60,11 +60,11 @@ const store = new Vuex.Store({
 			state.productAddAlert = product;
 		},
 		REMOVE_CART_ITEM: function(state, id) {
-			state.cart = state.cart.filter(item => item.id !== id);
+			state.cart = state.cart.filter(item => item._id !== id);
 		},
 		CHANGE_ITEM_QUANTITY: function(state, { id, quantity }) {
 			state.cart = state.cart.filter(item => {
-				if (item.id === id) return (item.quantity += quantity);
+				if (item._id === id) return (item.quantity += quantity);
 				else return item;
 			});
 		},
@@ -131,7 +131,7 @@ const store = new Vuex.Store({
 		async addToCart(context, product) {
 			try {
 				const hasAlready = context.state.cart.find(
-					item => item.id === product.id
+					item => item._id === product._id
 				);
 				if (!hasAlready) {
 					context.commit('ADD_TO_CART', product);

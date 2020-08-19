@@ -27,13 +27,13 @@
               <div class="btn-group" role="group" aria-label="Basic example">
                 <button
                   :disabled="item.quantity<2"
-                  @click="changeQuantity(item.id, -1)"
+                  @click="changeQuantity(item._id, -1)"
                   type="button"
                   class="btn btn-outline-info"
                 >-</button>
                 <button type="button" class="btn btn-outline-info">{{ item.quantity }}</button>
                 <button
-                  @click="changeQuantity(item.id, 1)"
+                  @click="changeQuantity(item._id, 1)"
                   :disabled="item.quantity>9"
                   type="button"
                   class="btn btn-outline-info"

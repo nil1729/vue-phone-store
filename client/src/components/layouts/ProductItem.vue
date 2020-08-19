@@ -24,7 +24,7 @@ export default {
     hasCarted() {
       if (this.$store.state.cart) {
         let index = this.$store.state.cart.findIndex(
-          (item) => item.id === this.product.id
+          (item) => item._id === this.product._id
         );
         if (index > -1) {
           return true;
