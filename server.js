@@ -1,8 +1,15 @@
+if (process.env.NODE_ENV !== 'production') {
+	require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const auths = require('./routes/auths');
 const products = require('./routes/products');
+const connectDB = require('./config/db');
+
+connectDB();
 
 app.use(express.json());
 app.use('/api/v1', auths);

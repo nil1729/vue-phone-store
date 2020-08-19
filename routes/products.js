@@ -3,11 +3,9 @@ const router = express.Router();
 const verifyAuth = require('../middleware/auth');
 const admin = require('../config/admin');
 const paginate = require('../middleware/paginate');
+const Product = require('../models/Product');
 
-//TODO Just for Testing
-const { products } = require('../data');
-
-router.get('/products', [verifyAuth, paginate(products)], async (req, res) => {
+router.get('/products', [verifyAuth, paginate(Product)], async (req, res) => {
 	try {
 		if (!req.authID) {
 			return res.status(400).json({
@@ -49,10 +47,7 @@ router.post('/admin/add-product', verifyAuth, async (req, res) => {
 				msg: 'Unauthorized Access',
 			});
 		}
-		const docSnap = await admin
-			.firestore()
-			.collection('products')
-			.add(req.body);
+		await Product.create(req.body);
 		return res.json({
 			code: 'Server Notification',
 			message: 'Product Details Uploaded Successfully',
