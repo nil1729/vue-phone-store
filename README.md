@@ -11,11 +11,12 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
 
 1. _`Node JS Express Framework`_ is used as a building Backend part of this Website.
 2. _`firebase Firestore`_ is used to store information about Users.
-3. _`firebase Storage`_ is used for store the Uploaded Files.
-4. _`firebase Authentication`_ is used for for Authenticate a User. User can authenticate using _Google Sign in_ or _Custom Email Password_ Method.
-5. _`Vue JS`_ is used as frontend Framework for building SPA.
-6. _`Bootstrap`_ is used for building UI and this website is Responsive for Desktop Devices and Tabs only.
-7. Site has _`Admin`_ functionality by which site owner can add Product to his Store.
+3. _`MongoDB`_ is used to Store Products Details and URL of Photos.
+4. _`firebase Storage`_ is used for store the Uploaded Files.
+5. _`firebase Authentication`_ is used for for Authenticate a User. User can authenticate using _Google Sign in_ or _Custom Email Password_ Method.
+6. _`Vue JS`_ is used as frontend Framework for building SPA.
+7. _`Bootstrap`_ is used for building UI and this website is Responsive for Desktop Devices and Tabs only.
+8. Site has _`Admin`_ functionality by which site owner can add Product to his Store.
 
 ---
 
