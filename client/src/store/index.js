@@ -26,6 +26,8 @@ const store = new Vuex.Store({
 		productAddAlert: null,
 		productFetching: true,
 		productUploading: false,
+		viewProductFetching: false,
+		viewSingleProduct: null,
 	},
 	mutations: {
 		SET_ADMIN(state, status) {
@@ -79,6 +81,12 @@ const store = new Vuex.Store({
 				state.products.results.push(payload);
 			}
 		},
+		SET_VIEW_PRODUCT_FETCHING(state, payload) {
+			state.viewProductFetching = payload;
+		},
+		SET_SINGLE_VIEW_PRODUCT(state, payload) {
+			state.viewSingleProduct = payload;
+		},
 	},
 	getters: {
 		formatPrice: () => price => {
@@ -88,6 +96,16 @@ const store = new Vuex.Store({
 				minimumFractionDigits: 2,
 			});
 			return format.format(price).substr(1);
+		},
+		hasCarted: state => id => {
+			if (state.cart) {
+				let index = state.cart.findIndex(item => item._id === id);
+				if (index > -1) {
+					return true;
+				}
+				return false;
+			}
+			return false;
 		},
 	},
 	actions: {
@@ -205,6 +223,23 @@ const store = new Vuex.Store({
 			} catch (e) {
 				console.log(e);
 			}
+		},
+		async fetchSingleProduct(context, id) {
+			context.commit('SET_VIEW_PRODUCT_FETCHING', true);
+			try {
+				const res = await axios.get(
+					'/api/v1/view/product/' + id,
+					createConfig()
+				);
+				if (!res.data.product) {
+					context.commit('SET_SINGLE_VIEW_PRODUCT', null);
+				} else {
+					context.commit('SET_SINGLE_VIEW_PRODUCT', res.data.product);
+				}
+			} catch (e) {
+				context.commit('SET_SINGLE_VIEW_PRODUCT', null);
+			}
+			context.commit('SET_VIEW_PRODUCT_FETCHING', false);
 		},
 	},
 });

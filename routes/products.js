@@ -60,4 +60,17 @@ router.post('/admin/add-product', verifyAuth, async (req, res) => {
 	}
 });
 
+router.get('/view/product/:id', verifyAuth, async (req, res) => {
+	try {
+		const product = await Product.findById(req.params.id);
+		res.json({
+			product,
+		});
+	} catch (e) {
+		return res.status(500).json({
+			msg: 'Server error',
+		});
+	}
+});
+
 module.exports = router;

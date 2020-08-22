@@ -8,7 +8,10 @@
       </button>
     </div>
     <div class="card-body d-flex justify-content-between align-items-center border-top">
-      <p class="card-text lead mb-0">{{product && product.model}}</p>
+      <router-link
+        :to="product && product._id"
+        class="card-text lead mb-0"
+      >{{product && product.model}}</router-link>
       <p class="card-text lead">₹ {{product && formatPrice(product.price)}}</p>
     </div>
   </div>

@@ -28,8 +28,7 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
 
 #### TODO
 
-1. Newly added Product is not directly added to Product Page
-2. Payment Method hasn't been implemented yet.
+1. Payment Method hasn't been implemented yet.
 
 ---
 

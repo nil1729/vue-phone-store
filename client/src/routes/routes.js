@@ -5,6 +5,7 @@ import Products from '@/components/pages/Products.vue';
 import Profile from '@/components/pages/Profile.vue';
 import AddProduct from '@/components/pages/addProduct.vue';
 import NotFound from '@/components/pages/NotFound.vue';
+import ProductView from '@/components/pages/ProductView.vue';
 
 const routes = [
 	{
@@ -37,6 +38,11 @@ const routes = [
 				path: '/admin/add-product',
 				name: 'Admin-Add-Product',
 				component: AddProduct,
+			},
+			{
+				path: '/view/:id',
+				name: 'Product-View',
+				component: ProductView,
 			},
 			{
 				path: '*',
