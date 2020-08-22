@@ -32,7 +32,9 @@ export default {
       this.$store.commit("CART_NOTIFICATION", null);
       if (type === "go-cart" && this.$route.name !== "Cart") {
         return this.$router.push("/cart");
-      } else if (this.$route.name !== "Products") {
+      } else if (type === "go-cart" && this.$route.name === "Cart") {
+        return;
+      } else {
         return this.$router.push("/");
       }
     },

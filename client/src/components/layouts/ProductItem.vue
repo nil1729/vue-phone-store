@@ -2,14 +2,14 @@
   <div class="card" style="width: 18rem;">
     <div class="image">
       <img :src="product && product.photoURL" alt />
-      <button @click="addToCart" class="btn btn-primary cart-btn">
-        <i v-if="!hasCarted" class="fal fa-cart-arrow-down"></i>
+      <button @click="addToCart(product)" class="btn btn-primary cart-btn">
+        <i v-if="!hasCarted(product && product._id)" class="fal fa-cart-arrow-down"></i>
         <p v-else class="lead mb-0">In Cart</p>
       </button>
     </div>
     <div class="card-body d-flex justify-content-between align-items-center border-top">
       <router-link
-        :to="product && product._id"
+        :to="product && `/view/${product._id}`"
         class="card-text lead mb-0"
       >{{product && product.model}}</router-link>
       <p class="card-text lead">₹ {{product && formatPrice(product.price)}}</p>
@@ -18,29 +18,15 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Product-Item",
   props: ["product"],
   computed: {
-    ...mapGetters(["formatPrice"]),
-    hasCarted() {
-      if (this.$store.state.cart) {
-        let index = this.$store.state.cart.findIndex(
-          (item) => item._id === this.product._id
-        );
-        if (index > -1) {
-          return true;
-        }
-        return false;
-      }
-      return false;
-    },
+    ...mapGetters(["formatPrice", "hasCarted"]),
   },
   methods: {
-    addToCart() {
-      this.$store.dispatch("addToCart", this.product);
-    },
+    ...mapActions(["addToCart"]),
   },
 };
 </script>
