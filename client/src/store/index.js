@@ -74,6 +74,11 @@ const store = new Vuex.Store({
 		SET_PRODUCT_UPLOADING(state, payload) {
 			state.productUploading = payload;
 		},
+		ADD_PRODUCT_IN_LIST(state, payload) {
+			if (state.products.current === state.products.length) {
+				state.products.results.push(payload);
+			}
+		},
 	},
 	getters: {
 		formatPrice: () => price => {
@@ -175,6 +180,7 @@ const store = new Vuex.Store({
 					dbProduct,
 					createConfig()
 				);
+				context.commit('ADD_PRODUCT_IN_LIST', dbProduct);
 				context.commit('SET_PRODUCT_UPLOADING', false);
 				context.commit('SET_ERRORS', res.data);
 			} catch (e) {
