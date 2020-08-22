@@ -56,7 +56,7 @@ const store = new Vuex.Store({
 		},
 		ADD_TO_CART: function(state, product) {
 			product.quantity = 1;
-			state.cart.push(product);
+			state.cart = [product, ...state.cart];
 		},
 		CART_NOTIFICATION: function(state, product) {
 			state.productAddAlert = product;
@@ -77,8 +77,9 @@ const store = new Vuex.Store({
 			state.productUploading = payload;
 		},
 		ADD_PRODUCT_IN_LIST(state, payload) {
-			if (state.products.current === state.products.length) {
-				state.products.results.push(payload);
+			if (state.products.current === 1) {
+				state.products.results.pop();
+				state.products.results = [payload, ...state.products.results];
 			}
 		},
 		SET_VIEW_PRODUCT_FETCHING(state, payload) {

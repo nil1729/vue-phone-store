@@ -18,6 +18,7 @@ module.exports = model => {
 			}
 			products.results = await model
 				.find()
+				.sort({ updatedAt: -1 })
 				.limit(pageLen)
 				.select('-description')
 				.select('-brand')
