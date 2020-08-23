@@ -34,7 +34,7 @@ export default {
         return this.$router.push("/cart");
       } else if (type === "go-cart" && this.$route.name === "Cart") {
         return;
-      } else {
+      } else if (this.$route.name !== "Products") {
         return this.$router.push("/");
       }
     },
