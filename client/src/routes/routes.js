@@ -1,15 +1,8 @@
-import Authentication from '../components/pages/auth.vue';
 import Home from '@/components/pages/Home.vue';
-import Cart from '@/components/pages/cart.vue';
-import Products from '@/components/pages/Products.vue';
-import Profile from '@/components/pages/Profile.vue';
-import AddProduct from '@/components/pages/addProduct.vue';
-import NotFound from '@/components/pages/NotFound.vue';
-import ProductView from '@/components/pages/ProductView.vue';
 
 const routes = [{
 		name: 'Authenticatiion',
-		component: Authentication,
+		component: () => import('@/components/pages/auth.vue'),
 		path: '/login',
 		meta: {
 			requiresGuest: true,
@@ -20,37 +13,37 @@ const routes = [{
 		children: [{
 				path: '/cart',
 				name: 'Cart',
-				component: Cart,
+				component: () => import('@/components/pages/cart.vue'),
 			},
 			{
 				path: '',
 				name: 'Products',
-				component: Products,
+				component: () => import('@/components/pages/Products.vue'),
 			},
 			{
 				path: '/profile',
 				name: 'Profile',
-				component: Profile,
+				component: () => import('@/components/pages/Profile.vue'),
 			},
 			{
 				path: '/profile/settings',
 				name: 'Settings',
-				component: Profile,
+				component: () => import('@/components/pages/Profile.vue'),
 			},
 			{
 				path: '/admin/add-product',
 				name: 'Admin-Add-Product',
-				component: AddProduct,
+				component: () => import('@/components/pages/addProduct.vue'),
 			},
 			{
 				path: '/view/:id',
 				name: 'Product-View',
-				component: ProductView,
+				component: () => import('@/components/pages/ProductView.vue'),
 			},
 			{
 				path: '*',
 				name: 'NotFound',
-				component: NotFound,
+				component: () => import('@/components/pages/NotFound.vue'),
 			},
 		],
 		meta: {
