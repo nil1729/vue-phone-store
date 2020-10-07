@@ -7,8 +7,7 @@ import AddProduct from '@/components/pages/addProduct.vue';
 import NotFound from '@/components/pages/NotFound.vue';
 import ProductView from '@/components/pages/ProductView.vue';
 
-const routes = [
-	{
+const routes = [{
 		name: 'Authenticatiion',
 		component: Authentication,
 		path: '/login',
@@ -18,8 +17,7 @@ const routes = [
 	},
 	{
 		path: '/',
-		children: [
-			{
+		children: [{
 				path: '/cart',
 				name: 'Cart',
 				component: Cart,
@@ -32,6 +30,11 @@ const routes = [
 			{
 				path: '/profile',
 				name: 'Profile',
+				component: Profile,
+			},
+			{
+				path: '/profile/settings',
+				name: 'Settings',
 				component: Profile,
 			},
 			{
