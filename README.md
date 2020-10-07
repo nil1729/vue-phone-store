@@ -13,10 +13,88 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
 2. _`firebase Firestore`_ is used to store information about Users.
 3. _`MongoDB`_ is used to Store Products Details and URL of Photos.
 4. _`firebase Storage`_ is used for store the Uploaded Files.
-5. _`firebase Authentication`_ is used for for Authenticate a User. User can authenticate using _Google Sign in_ or _Custom Email Password_ Method.
+5. _`firebase Authentication`_ is used for for Authenticate a User. User can authenticate using _**Google Sign in**_ or _**Custom Email Password**_ Method.
 6. _`Vue JS`_ is used as frontend Framework for building SPA.
 7. _`Bootstrap`_ is used for building UI and this website is Responsive for Desktop Devices and Tabs only.
 8. Site has _`Admin`_ functionality by which site owner can add Product to his Store.
+
+---
+
+## Run this Project on Local Environment.
+
+1. **Prerequisites**
+   1. NodeJS installed on your Local machine
+   2. MongoDB installed on your local machine or have an Atlas Account.
+   3. A Gmail Account for Firebase Services.
+2. **Credentials Setup**
+
+   1. Create a MongoDB Atlas Account for Host this Project Online. Find Tutorials [here](https://www.youtube.com/watch?v=KKyag6t98g8).
+   2. Setup a Firebase Project for using Firestore and Authentication. Find Tutorials [here](https://www.youtube.com/watch?v=6juww5Lmvgo).
+   3. Setup [Firestore](https://www.youtube.com/watch?v=UFLvSp4Mh9k&list=PL4cUxeGkcC9itfjle0ji1xOZ2cjRGY_WB&index=2) and [Enable Authenitaion Methods](https://www.youtube.com/watch?v=-OKrloDzGpU)
+   4. Generate Private keys for Firebase Admin. Find tutorials [here](https://youtu.be/WtYzHTXHBp0).
+
+3. **Project Setup**
+
+   1. Clone this Repository or Download the zip File.
+      ```
+       >> git clone https://github.com/nil1729/vue-phone-store
+      ```
+   2. Create a new file named `secret.json` on `config` directory which contains Generated Private keys on Firebase project.
+
+      ```
+          {
+              "type": "service_account",
+              "project_id": "",
+              "private_key_id": "",
+              "private_key": "",
+              "client_email": "",
+              "client_id": "",
+              "auth_uri": "",
+              "token_uri": "",
+              "auth_provider_x509_cert_url": "",
+              "client_x509_cert_url": ""
+          }
+
+      ```
+
+   3. Create another `cofig.js` file on `/client/src/firebase`. Put all firebase config Credentials for Frontend. (In following Format)
+
+      ```
+        const firebaseConfig = {
+            apiKey: "",
+            authDomain: "",
+            databaseURL: "",
+            projectId: "",
+            storageBucket: "",
+            messagingSenderId: "",
+            appId: "",
+            measurementId: ""
+        };
+
+        export default firebaseConfig;
+      ```
+
+   4. Create a `.env` file on root directory. Which Contains MongoURI.
+      ```
+       DB_URI = <- Mongo Atlas URI ->
+      ```
+   5. Run this command
+
+      ```
+       >> npm run dev  // to start Vue Development server and Backend server together.
+
+       >> npm run server // to start only backend server
+
+       >> npm run Client // to start Vue Development server only (But it
+       will not working alone as api depends on Backend also)
+
+      ```
+
+4. **Admin Setup**
+   1. Run this Command on root directory
+      ```
+        >> npm run admin
+      ```
 
 ---
 
