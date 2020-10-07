@@ -98,9 +98,20 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 	try {
 		let {
 			displayName,
-			phoneNumber
+			phoneNumber,
+			photoURL
 		} = req.body;
-		let user;
+		if (photoURL) {
+			await admin.auth().updateUser(req.authID, {
+				photoURL,
+			});
+			await admin.firestore().collection("users").doc(req.authID).update({
+				"details.photoURL": photoURL,
+			});
+			return res.status(200).json({
+				msg: "Profile Photo Updated Succesfully",
+			});
+		}
 		if (displayName) {
 			let words = displayName.split(" ");
 			words.forEach((word) => {
@@ -117,7 +128,7 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 			});
 		}
 		if (phoneNumber && displayName) {
-			user = await admin.auth().updateUser(req.authID, {
+			await admin.auth().updateUser(req.authID, {
 				displayName,
 			});
 			await admin.firestore().collection("users").doc(req.authID).update({

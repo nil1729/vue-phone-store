@@ -43,8 +43,12 @@ const store = new Vuex.Store({
 			}
 		},
 		SET_USER_UPDATE: function (state, data) {
-			state.user.displayName = data.displayName;
-			state.user.phoneNumber = data.phoneNumber;
+			if (data.photoURL) {
+				state.user.photoURL = data.photoURL;
+			} else {
+				state.user.displayName = data.displayName;
+				state.user.phoneNumber = data.phoneNumber;
+			}
 		},
 		SET_CART_STATE: function (state, cart) {
 			state.cart = cart;
@@ -165,7 +169,36 @@ const store = new Vuex.Store({
 				console.log(e);
 			}
 		},
-
+		async updateDP(context, file) {
+			try {
+				const storage = firebase.storage();
+				const extName = path.extname(file.name);
+				const fileOnlyName = crypto
+					.randomBytes(15)
+					.toString('hex')
+					.toUpperCase();
+				const storageRef = storage.ref(`profiles/${context.state.user.id}/${fileOnlyName}${extName}`);
+				const metadata = {
+					contentType: `${file.type}`,
+				};
+				await storageRef.put(file, metadata);
+				const photoURL = await storageRef.getDownloadURL();
+				let res = await axios.post('/api/v1/update-profile-details', {
+					photoURL
+				}, createConfig());
+				if (res.status === 200) {
+					context.commit('SET_USER_UPDATE', {
+						photoURL
+					});
+					context.commit('SET_ERRORS', {
+						code: "Notification",
+						message: res.data.msg
+					});
+				}
+			} catch (e) {
+				console.log(e);
+			}
+		},
 		async userSignOut(context) {
 			localStorage.removeItem('authToken');
 			await firebase.auth().signOut();

@@ -6,7 +6,6 @@ import Profile from '@/components/pages/Profile.vue';
 import AddProduct from '@/components/pages/addProduct.vue';
 import NotFound from '@/components/pages/NotFound.vue';
 import ProductView from '@/components/pages/ProductView.vue';
-// import Settings from '@/components/pages/settings.vue';
 
 const routes = [{
 		name: 'Authenticatiion',
