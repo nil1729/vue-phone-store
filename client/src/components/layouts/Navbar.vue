@@ -16,7 +16,12 @@
     <div class="ml-auto">
       <ul class="navbar-nav mr-auto ml-5 align-items-center">
         <li v-if="$store.state.isAdmin" class="nav-item">
-          <router-link to="/admin/add-product" type="button" class="btn mr-2 btn-info" id="add-btn">
+          <router-link
+            to="/admin/add-product"
+            type="button"
+            class="btn mr-2 btn-info"
+            id="add-btn"
+          >
             <i class="fal fa-plus"></i>
             Add Product
           </router-link>
@@ -25,9 +30,9 @@
           <router-link to="/cart" type="button" class="btn" id="cart-btn">
             <i class="fas fa-cart-plus"></i>
             My Cart
-            <span
-              class="badge badge-light"
-            >{{ cartItems === 0 ? '' : cartItems }}</span>
+            <span class="badge badge-light">{{
+              cartItems === 0 ? "" : cartItems
+            }}</span>
           </router-link>
         </li>
         <li class="nav-item dropdown">
@@ -36,17 +41,34 @@
             class="nav-link dropdown-toggle p-0"
             href="javascript:void(0)"
           >
-            <img id="user-dp" :src="photoURL" alt="Phone Store" loading="lazy" />
+            <img
+              id="user-dp"
+              :src="photoURL"
+              alt="Phone Store"
+              loading="lazy"
+            />
           </a>
-          <div class="dropdown-menu" :style="{display: `${dropdownOpen ? 'block' : 'none'}`}">
-            <span class="dropdown-item text-info">{{displayName}}</span>
+          <div
+            class="dropdown-menu"
+            :style="{ display: `${dropdownOpen ? 'block' : 'none'}` }"
+          >
+            <span class="dropdown-item text-info">{{ displayName }}</span>
             <router-link
               @click="dropdownOpen = false"
               class="dropdown-item"
               to="/profile"
-            >Your Profile</router-link>
+              >Your Profile</router-link
+            >
+            <router-link
+              @click="dropdownOpen = false"
+              class="dropdown-item"
+              to="/profile/settings"
+              >Settings</router-link
+            >
             <div class="dropdown-divider"></div>
-            <span @click="callSignOut" class="dropdown-item text-danger">Sign out</span>
+            <span @click="callSignOut" class="dropdown-item text-danger"
+              >Sign out</span
+            >
           </div>
         </li>
       </ul>

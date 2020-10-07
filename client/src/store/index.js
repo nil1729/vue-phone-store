@@ -36,13 +36,17 @@ const store = new Vuex.Store({
 		SET_PAGE_LOADING(state, payload) {
 			state.pageLoading = payload;
 		},
-		SET_USER_STATE: function(state, user) {
+		SET_USER_STATE: function (state, user) {
 			state.user = user;
 			if (!user) {
 				state.isAdmin = false;
 			}
 		},
-		SET_CART_STATE: function(state, cart) {
+		SET_USER_UPDATE: function (state, data) {
+			state.user.displayName = data.displayName;
+			state.user.phoneNumber = data.phoneNumber;
+		},
+		SET_CART_STATE: function (state, cart) {
 			state.cart = cart;
 		},
 		SET_ERRORS(state, error) {
@@ -51,26 +55,29 @@ const store = new Vuex.Store({
 		SET_PRODUCT_LOADING(state, payload) {
 			state.productFetching = payload;
 		},
-		SET_PRODUCTS: function(state, products) {
+		SET_PRODUCTS: function (state, products) {
 			state.products = products;
 		},
-		ADD_TO_CART: function(state, product) {
+		ADD_TO_CART: function (state, product) {
 			product.quantity = 1;
 			state.cart = [product, ...state.cart];
 		},
-		CART_NOTIFICATION: function(state, product) {
+		CART_NOTIFICATION: function (state, product) {
 			state.productAddAlert = product;
 		},
-		REMOVE_CART_ITEM: function(state, id) {
+		REMOVE_CART_ITEM: function (state, id) {
 			state.cart = state.cart.filter(item => item._id !== id);
 		},
-		CHANGE_ITEM_QUANTITY: function(state, { id, quantity }) {
+		CHANGE_ITEM_QUANTITY: function (state, {
+			id,
+			quantity
+		}) {
 			state.cart = state.cart.filter(item => {
 				if (item._id === id) return (item.quantity += quantity);
 				else return item;
 			});
 		},
-		CLEAR_CART: function(state) {
+		CLEAR_CART: function (state) {
 			state.cart = [];
 		},
 		SET_PRODUCT_UPLOADING(state, payload) {
@@ -108,10 +115,18 @@ const store = new Vuex.Store({
 			}
 			return false;
 		},
+		user: (state) => {
+			return state.user;
+		}
 	},
 	actions: {
-		async userAuthenticate(context, { type, data }) {
-			let user = { ...data.providerData[0] };
+		async userAuthenticate(context, {
+			type,
+			data
+		}) {
+			let user = {
+				...data.providerData[0]
+			};
 			const idToken = await firebase.auth().currentUser.getIdToken(true);
 			localStorage.setItem('authToken', idToken);
 			if (type === 'register') {
@@ -119,8 +134,9 @@ const store = new Vuex.Store({
 				user = res.data.user;
 			} else if (type === 'google-register') {
 				let res = await axios.post(
-					'/api/v1/google-register',
-					{ user },
+					'/api/v1/google-register', {
+						user
+					},
 					createConfig()
 				);
 				user = res.data.user;
@@ -134,6 +150,22 @@ const store = new Vuex.Store({
 			context.commit('SET_PAGE_LOADING', false);
 			await context.dispatch('fetchProducts', 1);
 		},
+
+		async userUpdate(context, data) {
+			try {
+				let res = await axios.post('/api/v1/update-profile-details', data, createConfig());
+				if (res.status === 200) {
+					context.commit('SET_USER_UPDATE', data);
+					context.commit('SET_ERRORS', {
+						code: "Notification",
+						message: res.data.msg
+					});
+				}
+			} catch (e) {
+				console.log(e);
+			}
+		},
+
 		async userSignOut(context) {
 			localStorage.removeItem('authToken');
 			await firebase.auth().signOut();
@@ -175,8 +207,9 @@ const store = new Vuex.Store({
 		async saveCartProduct(context) {
 			try {
 				await axios.post(
-					'/api/v1/save-cart',
-					{ cart: context.state.cart },
+					'/api/v1/save-cart', {
+						cart: context.state.cart
+					},
 					createConfig()
 				);
 			} catch (e) {
