@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h1 v-if="isEmpty" class="text-center cart-empty-text mt-5">Your Cart is Currently Empty</h1>
+    <h1 v-if="isEmpty" class="text-center cart-empty-text mt-5">
+      Your Cart is Currently Empty
+    </h1>
     <div v-else class="mt-3">
       <h1 class="text-center cart-text m-auto">Your Cart</h1>
       <table class="table mt-4">
@@ -18,26 +20,36 @@
           <tr v-for="item in cartItems" :key="item._id">
             <th scope="row">
               <div class="image">
-                <img :src="item.photoURL" :alt="item._id" class="img-thumbnail img-fluid" />
+                <img
+                  :src="item.photoURL"
+                  :alt="item._id"
+                  class="img-thumbnail img-fluid"
+                />
               </div>
             </th>
             <td>{{ item.model }}</td>
-            <td class="price">₹ {{formatPrice(item.price)}}</td>
+            <td class="price">₹ {{ formatPrice(item.price) }}</td>
             <td>
               <div class="btn-group" role="group" aria-label="Basic example">
                 <button
-                  :disabled="item.quantity<2"
+                  :disabled="item.quantity < 2"
                   @click="changeQuantity(item._id, -1)"
                   type="button"
                   class="btn btn-outline-info"
-                >-</button>
-                <button type="button" class="btn btn-outline-info">{{ item.quantity }}</button>
+                >
+                  -
+                </button>
+                <button type="button" class="btn btn-outline-info">
+                  {{ item.quantity }}
+                </button>
                 <button
                   @click="changeQuantity(item._id, 1)"
-                  :disabled="item.quantity>9"
+                  :disabled="item.quantity > 9"
                   type="button"
                   class="btn btn-outline-info"
-                >+</button>
+                >
+                  +
+                </button>
               </div>
             </td>
             <td>
@@ -45,30 +57,38 @@
                 <i class="fad fa-trash"></i>
               </button>
             </td>
-            <td class="price">₹ {{formatPrice(item.price * item.quantity)}}</td>
+            <td class="price">
+              ₹ {{ formatPrice(item.price * item.quantity) }}
+            </td>
           </tr>
         </tbody>
       </table>
-      <div class="container d-flex justify-content-center align-items-end flex-column">
+      <div
+        class="container d-flex justify-content-center align-items-end flex-column"
+      >
         <button
           @click="$store.commit('CLEAR_CART')"
           class="btn btn-outline-danger btn-sm mb-2 clear-cart-btn"
-        >Clear Cart</button>
+        >
+          Clear Cart
+        </button>
         <p class="lead text-primary">
           Product Total :
-          <span
-            class="ml-2 font-weight-normal text-dark"
-          >₹ {{formatPrice(productTotal)}}</span>
+          <span class="ml-2 font-weight-normal text-dark"
+            >₹ {{ formatPrice(productTotal) }}</span
+          >
         </p>
         <p class="lead text-primary">
           Tax (GST 5%) :
-          <span class="ml-2 font-weight-normal text-dark">₹ {{formatPrice(taxTotal)}}</span>
+          <span class="ml-2 font-weight-normal text-dark"
+            >₹ {{ formatPrice(taxTotal) }}</span
+          >
         </p>
         <p class="lead text-primary">
           Grand Total :
-          <span
-            class="ml-2 font-weight-normal text-dark"
-          >₹ {{formatPrice((taxTotal + productTotal).toFixed(2))}}</span>
+          <span class="ml-2 font-weight-normal text-dark"
+            >₹ {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
+          >
         </p>
         <button @click="testCheckout" class="btn mt-1 mb-4 btn-success">
           Proceed to Checkout
@@ -83,6 +103,11 @@
 import { mapGetters } from "vuex";
 export default {
   name: "Cart-Page",
+  data() {
+    return {
+      isChanged: false,
+    };
+  },
   computed: {
     ...mapGetters(["formatPrice"]),
     isEmpty: function () {
@@ -104,9 +129,11 @@ export default {
   },
   methods: {
     remove(id) {
+      this.isChanged = true;
       this.$store.commit("REMOVE_CART_ITEM", id);
     },
     changeQuantity(id, quantity) {
+      this.isChanged = true;
       this.$store.commit("CHANGE_ITEM_QUANTITY", { id, quantity });
     },
     // TODO only for Development
@@ -114,12 +141,15 @@ export default {
       if (confirm("Do you Want to Proceed ?")) {
         alert("Successfully Purchased");
         this.$store.commit("CLEAR_CART");
+        this.isChanged = true;
       }
     },
     // Todo: Change this with Backend
   },
   beforeRouteLeave(to, from, next) {
-    this.$store.dispatch("saveCartProduct");
+    if (this.isChanged) {
+      this.$store.dispatch("saveCartProduct");
+    }
     next();
   },
 };
