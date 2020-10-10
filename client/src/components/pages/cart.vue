@@ -166,6 +166,7 @@ export default {
       this.$store.commit("REMOVE_CART_ITEM", id);
       if (this.$store.state.cart && this.$store.state.cart.length > 0) {
         this.isChanged = true;
+        this.cartSaved = null;
       } else {
         this.isChanged = false;
         this.handleEmptyCart();
@@ -173,6 +174,7 @@ export default {
     },
     changeQuantity(id, quantity) {
       this.isChanged = true;
+      this.cartSaved = null;
       this.$store.commit("CHANGE_ITEM_QUANTITY", { id, quantity });
     },
 
