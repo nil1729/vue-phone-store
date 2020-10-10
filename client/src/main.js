@@ -7,7 +7,7 @@ Vue.config.productionTip = false;
 
 let app;
 
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
 	if (!app) {
 		app = new Vue({
 			router,
@@ -26,3 +26,15 @@ firebase.auth().onAuthStateChanged(function(user) {
 		}).$mount('#app');
 	}
 });
+
+
+
+// =========== Just For Fun ============ //
+
+const warningTitleCSS = 'color:red; font-size:60px; font-weight: bold; -webkit-text-stroke: 1px black;';
+const warningDescCSS = 'font-size: 18px;';
+console.log('%cStop!', warningTitleCSS);
+console.log("%cMade by Nilanjan. Using Firebase, VueJS, NodeJS and MongoDB", warningDescCSS);
+console.log('%cGo to https://github.com/nil1729/vue-phone-store for source code', warningDescCSS);
+
+// =================================== //

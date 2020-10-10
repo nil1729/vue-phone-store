@@ -66,12 +66,30 @@
       <div
         class="container d-flex justify-content-center align-items-end flex-column"
       >
-        <button
-          @click="$store.commit('CLEAR_CART')"
-          class="btn btn-outline-danger btn-sm mb-2 clear-cart-btn"
-        >
-          Clear Cart
-        </button>
+        <div class="row">
+          <button
+            v-if="showSaveButton"
+            :disabled="loading || cartSaved"
+            @click="handleSaveCart"
+            class="btn btn-outline-success mr-4 btn-sm mb-2 clear-cart-btn"
+          >
+            {{
+              cartSaved
+                ? "Saved for later"
+                : loading
+                ? "Saving Cart ..."
+                : "Save for Later"
+            }}
+          </button>
+          <button
+            :disabled="loading"
+            @click="handleEmptyCart"
+            class="btn btn-outline-danger btn-sm mb-2 clear-cart-btn"
+          >
+            Clear Cart
+          </button>
+        </div>
+
         <p class="lead text-primary">
           Product Total :
           <span class="ml-2 font-weight-normal text-dark"
@@ -101,12 +119,28 @@
 
 <script>
 import { mapGetters } from "vuex";
+
 export default {
   name: "Cart-Page",
   data() {
     return {
       isChanged: false,
+      showSaveButton: false,
+      loading: false,
+      cartSaved: null,
     };
+  },
+  watch: {
+    isChanged() {
+      if (this.isChanged) {
+        this.showSaveButton = true;
+        window.onbeforeunload = function () {
+          return "Are you sure you want to leave? You are in the middle of something.";
+        };
+      } else {
+        window.onbeforeunload = null;
+      }
+    },
   },
   computed: {
     ...mapGetters(["formatPrice"]),
@@ -129,13 +163,19 @@ export default {
   },
   methods: {
     remove(id) {
-      this.isChanged = true;
       this.$store.commit("REMOVE_CART_ITEM", id);
+      if (this.$store.state.cart && this.$store.state.cart.length > 0) {
+        this.isChanged = true;
+      } else {
+        this.isChanged = false;
+        this.handleEmptyCart();
+      }
     },
     changeQuantity(id, quantity) {
       this.isChanged = true;
       this.$store.commit("CHANGE_ITEM_QUANTITY", { id, quantity });
     },
+
     // TODO only for Development
     testCheckout() {
       if (confirm("Do you Want to Proceed ?")) {
@@ -144,11 +184,34 @@ export default {
         this.isChanged = true;
       }
     },
-    // Todo: Change this with Backend
+    // Todo: Change this with Backend ========== Payment methods to be implemented Soon;
+
+    async handleSaveCart() {
+      if (this.isChanged) {
+        try {
+          this.loading = true;
+          await this.$store.dispatch("saveCartProduct");
+          this.loading = false;
+          this.isChanged = false;
+          this.cartSaved = true;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
+    handleEmptyCart() {
+      this.$store.commit("CLEAR_CART");
+      this.$store.dispatch("saveCartProduct");
+    },
   },
   beforeRouteLeave(to, from, next) {
     if (this.isChanged) {
-      this.$store.dispatch("saveCartProduct");
+      if (confirm("Are you sure you want to leave without Save the Cart ?")) {
+        this.isChanged = false;
+        next();
+      } else {
+        return;
+      }
     }
     next();
   },
