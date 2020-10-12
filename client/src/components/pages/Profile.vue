@@ -5,7 +5,11 @@
         <div class="col-md-4 dp-col">
           <div class="image m-auto">
             <img
-              @click="modalOpen = true"
+              @click="
+                if (!show) {
+                  modalOpen = true;
+                }
+              "
               class="img-fluid"
               :class="{ 'low-opacity': !show }"
               :src="user && user.photoURL"
@@ -105,7 +109,7 @@
         </div>
       </div>
     </div>
-    <app-dp-modal @modalclose="modalOpen = false" v-if="modalOpen" />
+    <app-dp-modal @modalclose="modalOpen = false" v-if="modalOpen && !show" />
   </div>
 </template>
 
