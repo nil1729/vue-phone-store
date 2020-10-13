@@ -159,4 +159,16 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 	}
 });
 
+
+// router.get('/users', async (req, res) => {
+// 	const usersDoc = await admin.firestore().collection('users').get();
+// 	const data = [];
+// 	usersDoc.forEach(item => {
+// 		data.push(item.data());
+// 	});
+// 	res.json({
+// 		data
+// 	});
+// })
+
 module.exports = router;

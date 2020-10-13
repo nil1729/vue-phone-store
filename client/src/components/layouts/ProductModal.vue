@@ -5,14 +5,21 @@
       <div class="image m-auto">
         <img class="img-fluid" :src="product.photoURL" alt />
       </div>
-      <p class="lead my-2 text-info">{{product.model}}</p>
+      <p class="lead my-2 text-info">{{ product.model }}</p>
       <p class="lead text-danger">
-        Price{{' '}}
-        <span class="text-muted">₹ {{formatPrice(product.price)}}</span>
+        Price{{ " " }}
+        <span class="text-muted">₹ {{ formatPrice(product.price) }}</span>
       </p>
-      <button @click="handleClose('close')" class="btn btn-outline-primary">Continue Shopping</button>
+      <button @click="handleClose('close')" class="btn btn-outline-primary">
+        Continue Shopping
+      </button>
       <br />
-      <button @click="handleClose('go-cart')" class="btn btn-outline-warning mt-2">Go to Cart</button>
+      <button
+        @click="handleClose('go-cart')"
+        class="btn btn-outline-warning mt-2"
+      >
+        Go to Cart
+      </button>
     </div>
   </div>
 </template>
@@ -49,7 +56,7 @@ export default {
   height: 100%;
   background-color: rgba(97, 95, 95, 0.5);
   position: fixed;
-  z-index: 98;
+  z-index: 400;
   display: flex;
   justify-content: center;
   align-items: center;

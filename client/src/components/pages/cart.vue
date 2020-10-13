@@ -108,7 +108,7 @@
             >₹ {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
           >
         </p>
-        <button @click="testCheckout" class="btn mt-1 mb-4 btn-success">
+        <button @click="checkout" class="btn mt-1 mb-4 btn-success">
           Proceed to Checkout
           <i class="ml-1 fal fa-shopping-cart"></i>
         </button>
@@ -179,11 +179,14 @@ export default {
     },
 
     // TODO only for Development
-    testCheckout() {
-      if (confirm("Do you Want to Proceed ?")) {
-        alert("Successfully Purchased");
-        this.$store.commit("CLEAR_CART");
-        this.isChanged = true;
+    async checkout() {
+      try {
+        if (this.isChanged) {
+          await this.handleSaveCart();
+        }
+        this.$router.push("/checkout");
+      } catch (error) {
+        console.error(error);
       }
     },
     // Todo: Change this with Backend ========== Payment methods to be implemented Soon;
@@ -243,12 +246,15 @@ table {
 .image {
   height: 100px;
   width: 100px;
+  margin: auto;
 }
 img {
   height: 100%;
 }
+.price:last-child {
+  font-weight: 700 !important;
+}
 .price {
-  font-weight: 700;
   letter-spacing: 0.5px;
   font-size: 1rem;
 }

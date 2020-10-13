@@ -249,6 +249,36 @@ const store = new Vuex.Store({
 				console.log(e);
 			}
 		},
+		async fetchCheckoutItems() {
+			try {
+				const res = await axios.get(
+					'/api/v1/checkout',
+					createConfig()
+				);
+				return res.data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		async verifyPurchase(context, {
+			orderID,
+			orderStaticID
+		}) {
+			try {
+				const res = await axios.post(
+					'/api/v1//checkout/verify-order', {
+						orderID,
+						orderStaticID
+					},
+					createConfig()
+				);
+				return res.data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
 		async addAdminProducts(context, product) {
 			try {
 				context.commit('SET_PRODUCT_UPLOADING', true);

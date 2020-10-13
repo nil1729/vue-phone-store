@@ -95,13 +95,13 @@ export default {
     },
   },
   computed: {
-    photoURL: function () {
+    photoURL: function() {
       return this.$store.state.user && this.$store.state.user.photoURL;
     },
-    displayName: function () {
+    displayName: function() {
       return this.$store.state.user && this.$store.state.user.displayName;
     },
-    cartItems: function () {
+    cartItems: function() {
       return this.$store.state.cart && this.$store.state.cart.length;
     },
   },
@@ -110,7 +110,7 @@ export default {
 
 <style scoped>
 .sticky-top {
-  z-index: 97;
+  z-index: 300;
 }
 .navbar-brand {
   margin-left: 2rem;
