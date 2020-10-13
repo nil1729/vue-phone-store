@@ -159,4 +159,23 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 	}
 });
 
+
+router.get('/checkout', verifyAuth, async (req, res) => {
+	try {
+		const userDoc = await admin.firestore().collection("users").doc(req.authID).get();
+		if (userCart.exists) {
+			const cart = userDoc.data().cart;
+			return res.json({
+				cart,
+			});
+		}
+	} catch (e) {
+		console.log(e);
+		return res.status(400).json({
+			msg: "Invalid Credentials",
+		});
+	}
+});
+
+
 module.exports = router;
