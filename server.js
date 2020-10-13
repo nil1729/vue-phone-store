@@ -7,12 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const auths = require('./routes/auths');
 const products = require('./routes/products');
+const orders = require('./routes/orders');
 const connectDB = require('./config/db');
 
 connectDB();
 
 app.use(express.json());
 app.use('/api/v1', auths);
+app.use('/api/v1', orders);
 app.use('/api/v1', products);
 
 if (process.env.NODE_ENV === 'production') {

@@ -41,7 +41,7 @@
         <div class="col-md-4">
           <div class="container flex-column mx-auto text-center mt-5">
             <p class="lead text-primary">
-              Product Total :
+              Products Total :
               <span class="ml-2 font-weight-normal text-dark"
                 >₹ {{ formatPrice(productTotal) }}</span
               >
@@ -98,8 +98,8 @@ export default {
           },
           async onApprove(data) {
             console.log(data);
-            await this.handleEmptyCart();
-            this.$router.push("/"); // Redirect to Orders page
+            await vm.handleEmptyCart();
+            vm.$router.push("/"); // Redirect to Orders page
           },
         })
         .render(this.$refs.paypal);
@@ -117,10 +117,10 @@ export default {
   },
   computed: {
     ...mapGetters(["formatPrice"]),
-    isEmpty: function () {
+    isEmpty: function() {
       return this.$store.state.cart && this.$store.state.cart.length === 0;
     },
-    cartItems: function () {
+    cartItems: function() {
       return this.$store.state.cart;
     },
     productTotal() {
