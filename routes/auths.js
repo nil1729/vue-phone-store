@@ -163,16 +163,24 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 router.get('/checkout', verifyAuth, async (req, res) => {
 	try {
 		const userDoc = await admin.firestore().collection("users").doc(req.authID).get();
-		if (userCart.exists) {
-			const cart = userDoc.data().cart;
+		let total = 0;
+		if (userDoc.exists) {
+			userDoc.data().cart.forEach(item => {
+				total += (item.price * item.quantity);
+			});
+			total += (total * 0.05);
 			return res.json({
-				cart,
+				description: `Phone Store Products - ${req.authID} - < Random Unique ID (Crypto) >`,
+				amount: {
+					currency_code: 'INR',
+					value: parseFloat(total.toFixed(2))
+				}
 			});
 		}
 	} catch (e) {
 		console.log(e);
 		return res.status(400).json({
-			msg: "Invalid Credentials",
+			msg: "Server Error",
 		});
 	}
 });

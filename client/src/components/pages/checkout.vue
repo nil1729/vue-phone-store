@@ -1,60 +1,66 @@
 <template>
   <div class="container">
     <h1 v-if="isEmpty" class="text-center cart-empty-text mt-5">
-      Your Cart is Currently Empty
+      Your Cart is Currently Empty.
     </h1>
     <div v-else class="mt-3">
       <h1 class="text-center cart-text m-auto">Checkout Products</h1>
-      <table class="table mt-4">
-        <thead>
-          <tr class="text-uppercase">
-            <th scope="col">products</th>
-            <th scope="col">model</th>
-            <th scope="col">price</th>
-            <th scope="col">quantity</th>
-            <th scope="col">total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in cartItems" :key="item._id">
-            <th scope="row">
-              <div class="image">
-                <img
-                  :src="item.photoURL"
-                  :alt="item._id"
-                  class="img-thumbnail img-fluid"
-                />
-              </div>
-            </th>
-            <td>{{ item.model }}</td>
-            <td class="price">₹ {{ formatPrice(item.price) }}</td>
-            <td class="font-weight-bold">{{ item.quantity }}</td>
-            <td class="price">
-              ₹ {{ formatPrice(item.price * item.quantity) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="container flex-column mx-auto text-center">
-        <p class="lead text-primary">
-          Product Total :
-          <span class="ml-2 font-weight-normal text-dark"
-            >₹ {{ formatPrice(productTotal) }}</span
-          >
-        </p>
-        <p class="lead text-primary">
-          Tax (GST 5%) :
-          <span class="ml-2 font-weight-normal text-dark"
-            >₹ {{ formatPrice(taxTotal) }}</span
-          >
-        </p>
-        <p class="lead text-primary">
-          Grand Total :
-          <span class="ml-2 font-weight-normal text-dark"
-            >₹ {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
-          >
-        </p>
-        <div ref="paypal"></div>
+      <div class="row">
+        <div class="col-md-8">
+          <table class="table mt-4">
+            <thead>
+              <tr class="text-uppercase">
+                <th scope="col">products</th>
+                <th scope="col">model</th>
+                <th scope="col">price</th>
+                <th scope="col">quantity</th>
+                <th scope="col">total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in cartItems" :key="item._id">
+                <th scope="row">
+                  <div class="image">
+                    <img
+                      :src="item.photoURL"
+                      :alt="item._id"
+                      class="img-thumbnail img-fluid"
+                    />
+                  </div>
+                </th>
+                <td>{{ item.model }}</td>
+                <td class="price">₹ {{ formatPrice(item.price) }}</td>
+                <td class="font-weight-bold">{{ item.quantity }}</td>
+                <td class="price">
+                  ₹ {{ formatPrice(item.price * item.quantity) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-md-4">
+          <div class="container flex-column mx-auto text-center mt-5">
+            <p class="lead text-primary">
+              Product Total :
+              <span class="ml-2 font-weight-normal text-dark"
+                >₹ {{ formatPrice(productTotal) }}</span
+              >
+            </p>
+            <p class="lead text-primary">
+              Tax (GST 5%) :
+              <span class="ml-2 font-weight-normal text-dark"
+                >₹ {{ formatPrice(taxTotal) }}</span
+              >
+            </p>
+            <p class="lead text-primary">
+              Grand Total :
+              <span class="ml-2 font-weight-normal text-dark"
+                >₹ {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
+              >
+            </p>
+            <div ref="paypal"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -80,36 +86,41 @@ export default {
   methods: {
     async setLoaded() {
       this.scriptLoaded = true;
+      const vm = this;
       window.paypal
         .Buttons({
           async createOrder(data, actions) {
+            const checkoutDesc = await vm.$store.dispatch("fetchCheckoutItems");
+            console.log(checkoutDesc);
             return actions.order.create({
-              purchase_units: [
-                {
-                  description: "TESTING",
-                  amount: {
-                    currency_code: "INR",
-                    value: 100,
-                  },
-                },
-              ],
+              purchase_units: [checkoutDesc],
             });
           },
-          async onApprove(data, actions) {
-            const order = await actions.order.capture();
-            console.log(order);
+          async onApprove(data) {
+            console.log(data);
+            await this.handleEmptyCart();
+            this.$router.push("/"); // Redirect to Orders page
           },
         })
         .render(this.$refs.paypal);
     },
+    async handleEmptyCart() {
+      this.$store.commit("CLEAR_CART");
+      await this.$store.dispatch("saveCartProduct");
+    },
   },
-  watch: {},
+  beforeRouteEnter(to, from, next) {
+    if (from.name === "Cart") next();
+    else {
+      next({ name: "Cart" });
+    }
+  },
   computed: {
     ...mapGetters(["formatPrice"]),
-    isEmpty: function() {
+    isEmpty: function () {
       return this.$store.state.cart && this.$store.state.cart.length === 0;
     },
-    cartItems: function() {
+    cartItems: function () {
       return this.$store.state.cart;
     },
     productTotal() {
@@ -122,18 +133,6 @@ export default {
     taxTotal() {
       return parseFloat(((this.productTotal * 5) / 100).toFixed(2));
     },
-  },
-
-  beforeRouteLeave(to, from, next) {
-    if (this.isChanged) {
-      if (confirm("Are you sure you want to leave without Save the Cart ?")) {
-        this.isChanged = false;
-        next();
-      } else {
-        return;
-      }
-    }
-    next();
   },
 };
 </script>
