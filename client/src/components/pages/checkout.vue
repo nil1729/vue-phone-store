@@ -58,23 +58,41 @@
                 >₹ {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
               >
             </p>
-            <div ref="paypal"></div>
+            <div v-if="!isPaid">
+              <div ref="paypal"></div>
+            </div>
+            <div v-else class="mt-4">
+              <h3 class="text-success">
+                <i class="fa-2x fal fa-check-circle"></i>
+              </h3>
+              <h3 v-if="processing" class="text-success">
+                Processing your Order ...
+              </h3>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <app-checkout-loader v-if="processing" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import CheckoutLoader from "../utils/FullPageLoad";
 
 export default {
   name: "Cart-Page",
   data() {
     return {
       scriptLoaded: false,
+      orderStaticID: null,
+      processing: false,
+      isPaid: false,
     };
+  },
+  components: {
+    "app-checkout-loader": CheckoutLoader,
   },
   mounted() {
     const script = document.createElement("script");
@@ -91,15 +109,25 @@ export default {
         .Buttons({
           async createOrder(data, actions) {
             const checkoutDesc = await vm.$store.dispatch("fetchCheckoutItems");
-            console.log(checkoutDesc);
+            vm.orderStaticID = checkoutDesc.description.split("--")[2];
             return actions.order.create({
               purchase_units: [checkoutDesc],
             });
           },
           async onApprove(data) {
-            console.log(data);
+            vm.processing = true;
+            vm.isPaid = true;
+
+            await vm.$store.dispatch("verifyPurchase", {
+              orderStaticID: vm.orderStaticID,
+              orderID: data.orderID,
+            });
             await vm.handleEmptyCart();
-            vm.$router.push("/"); // Redirect to Orders page
+
+            vm.processing = false;
+            vm.isPaid = false;
+
+            vm.$router.push("/"); // Redirect to Orders page TODO
           },
         })
         .render(this.$refs.paypal);

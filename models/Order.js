@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const OrderSchema = mongoose.Schema({
-    products: {
-        type: 'array',
-        default: [],
-    },
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+    }],
     user: {
         type: String,
         required: true
@@ -19,7 +19,7 @@ const OrderSchema = mongoose.Schema({
         required: true,
         default: false,
     },
-    shippinigAddress: {
+    shippingAddress: {
         type: "object",
     },
     amount: {

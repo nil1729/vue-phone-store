@@ -16,7 +16,7 @@ router.get('/checkout', verifyAuth, async (req, res) => {
             let cartItems = [];
             userDoc.data().cart.forEach(item => {
                 total += (item.price * item.quantity);
-                cartItems.push(item);
+                cartItems.push(item._id);
             });
             total += (total * 0.05);
 
@@ -42,11 +42,11 @@ router.get('/checkout', verifyAuth, async (req, res) => {
             }
 
             return res.json({
-                description: `Phone Store Products - ${req.authID} -  ${order._id}`,
+                description: `Phone Store Products--${req.authID}--${order._id}`,
                 amount: {
                     currency_code: 'INR',
                     value: parseFloat(total.toFixed(2))
-                }
+                },
             });
         }
     } catch (e) {
@@ -64,7 +64,7 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
     try {
         const {
             orderID,
-            orderStaticId
+            orderStaticID
         } = req.body;
 
         const request = new checkoutNodeJssdk.orders.OrdersCaptureRequest(orderID);
@@ -77,24 +77,33 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
 
         if (capture.status === 'COMPLETED') {
             await Order.updateOne({
-                _id: orderStaticId
+                _id: orderStaticID
             }, {
                 $set: {
                     isPurchased: true,
-                    orderID: capture.captureResult.id,
+                    orderID: capture.id,
                     captureID: capture.purchase_units[0].payments.captures[0].id,
-                    shippingAddress: capture.purchase_units[0].shipping.address,
                 }
             });
+
+            const order = await Order.findOne({
+                _id: orderStaticID
+            }, {
+                user: 0
+            }).populate('products').exec();
+
+
             return res.json({
                 msg: 'Successful purchased',
-                captureID: capture.purchase_units[0].payments.captures[0].id
+                captureID: capture.purchase_units[0].payments.captures[0].id,
+                orderDetails: order
             });
         }
         return res.status(400).json({
             msg: 'Invalid Request or Data you are requesting is not valid',
         });
     } catch (err) {
+        console.log(err);
         return res.status(err.statusCode).json({
             error: JSON.parse(err.message)
         });
