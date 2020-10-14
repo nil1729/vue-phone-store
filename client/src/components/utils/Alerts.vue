@@ -1,7 +1,13 @@
 <template>
-  <div class="toast" :class="{show: error}" role="alert" aria-live="assertive" aria-atomic="true">
+  <div
+    class="toast"
+    :class="{ show: error }"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
     <div class="toast-header">
-      <strong class="mr-auto">{{ error && error.code}}</strong>
+      <strong class="mr-auto">{{ error && error.code }}</strong>
       <button
         @click="clearError"
         type="button"
@@ -12,7 +18,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="toast-body">{{error && error.message}}</div>
+    <div class="toast-body">{{ error && error.message }}</div>
   </div>
 </template>
 
@@ -37,7 +43,7 @@ export default {
   position: absolute;
   right: -5%;
   top: 5%;
-  z-index: 100;
+  z-index: 350;
   max-width: 300px;
   transition: all ease-in 0.2s;
 }

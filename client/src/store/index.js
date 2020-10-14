@@ -40,13 +40,13 @@ const store = new Vuex.Store({
     SET_PAGE_LOADING(state, payload) {
       state.pageLoading = payload;
     },
-    SET_USER_STATE: function(state, user) {
+    SET_USER_STATE: function (state, user) {
       state.user = user;
       if (!user) {
         state.isAdmin = false;
       }
     },
-    SET_USER_UPDATE: function(state, data) {
+    SET_USER_UPDATE: function (state, data) {
       if (data.photoURL) {
         state.user.photoURL = data.photoURL;
       } else {
@@ -54,7 +54,7 @@ const store = new Vuex.Store({
         state.user.phoneNumber = data.phoneNumber;
       }
     },
-    SET_SHIPPING_ADDRESS: function(state) {
+    SET_SHIPPING_ADDRESS: function (state) {
       const shippingData = localStorage.getItem("SHIPPING_ADDRESS");
       if (shippingData) {
         state.shippingAddress = JSON.parse(shippingData);
@@ -71,7 +71,7 @@ const store = new Vuex.Store({
         };
       }
     },
-    SET_CART_STATE: function(state, cart) {
+    SET_CART_STATE: function (state, cart) {
       state.cart = cart;
     },
     SET_ERRORS(state, error) {
@@ -80,30 +80,36 @@ const store = new Vuex.Store({
     SET_PRODUCT_LOADING(state, payload) {
       state.productFetching = payload;
     },
-    SET_PRODUCTS: function(state, products) {
+    SET_PRODUCTS: function (state, products) {
       state.products = products;
     },
-    ADD_TO_CART: function(state, product) {
+    ADD_TO_CART: function (state, product) {
       product.quantity = 1;
       state.cart = [product, ...state.cart];
     },
-    CART_NOTIFICATION: function(state, product) {
+    CART_NOTIFICATION: function (state, product) {
       state.productAddAlert = product;
     },
-    REMOVE_CART_ITEM: function(state, id) {
+    REMOVE_CART_ITEM: function (state, id) {
       state.cart = state.cart.filter((item) => item._id !== id);
     },
-    CHANGE_ITEM_QUANTITY: function(state, { id, quantity }) {
+    CHANGE_ITEM_QUANTITY: function (state, {
+      id,
+      quantity
+    }) {
       state.cart = state.cart.filter((item) => {
         if (item._id === id) return (item.quantity += quantity);
         else return item;
       });
     },
-    CLEAR_CART: function(state) {
+    CLEAR_CART: function (state) {
       state.cart = [];
     },
     SET_USER_ORDERS(state, payload) {
       state.userOrders = payload;
+    },
+    ADD_ORDER_TO_LIST(state, payload) {
+      state.userOrders = [payload, ...state.userOrders];
     },
 
     // Admin Mutations
@@ -152,7 +158,10 @@ const store = new Vuex.Store({
     },
   },
   actions: {
-    async userAuthenticate(context, { type, data }) {
+    async userAuthenticate(context, {
+      type,
+      data
+    }) {
       let user = {
         ...data.providerData[0],
       };
@@ -163,8 +172,7 @@ const store = new Vuex.Store({
         user = res.data.user;
       } else if (type === "google-register") {
         let res = await axios.post(
-          "/api/v1/google-register",
-          {
+          "/api/v1/google-register", {
             user,
           },
           createConfig()
@@ -217,8 +225,7 @@ const store = new Vuex.Store({
         await storageRef.put(file, metadata);
         const photoURL = await storageRef.getDownloadURL();
         let res = await axios.post(
-          "/api/v1/update-profile-details",
-          {
+          "/api/v1/update-profile-details", {
             photoURL,
           },
           createConfig()
@@ -277,8 +284,7 @@ const store = new Vuex.Store({
     async saveCartProduct(context) {
       try {
         await axios.post(
-          "/api/v1/save-cart",
-          {
+          "/api/v1/save-cart", {
             cart: context.state.cart,
           },
           createConfig()
@@ -297,18 +303,26 @@ const store = new Vuex.Store({
       }
     },
 
-    async verifyPurchase(context, { orderID, orderStaticID }) {
+    async verifyPurchase(context, {
+      orderID,
+      orderStaticID
+    }) {
       try {
         const res = await axios.post(
-          "/api/v1/checkout/verify-order",
-          {
+          "/api/v1/checkout/verify-order", {
             orderID,
             orderStaticID,
             shippingAddress: context.state.shippingAddress,
           },
           createConfig()
         );
-        return res.data;
+        if (res.status === 200) {
+          context.commit("SET_ERRORS", {
+            code: "Notification",
+            message: res.data.msg,
+          });
+          context.commit('ADD_ORDER_TO_LIST', res.data.orderDetails);
+        }
       } catch (error) {
         console.log(error);
       }

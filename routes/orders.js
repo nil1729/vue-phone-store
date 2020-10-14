@@ -97,13 +97,15 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
             const order = await Order.findOne({
                 _id: orderStaticID
             }, {
-                user: 0
-            }).populate('products').exec();
+                user: 0,
+                captureID: 0,
+                createdAt: 0,
+                __v: 0
+            }).populate('products.product').exec();
 
 
-            return res.json({
-                msg: 'Successful purchased',
-                captureID: capture.purchase_units[0].payments.captures[0].id,
+            return res.status(200).json({
+                msg: 'Order Succesfully Created',
                 orderDetails: order
             });
         }

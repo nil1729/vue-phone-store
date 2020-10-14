@@ -28,7 +28,11 @@
                     />
                   </div>
                 </th>
-                <td>{{ item.model }}</td>
+                <td>
+                  <router-link :to="'/view/' + item._id">{{
+                    item.model
+                  }}</router-link>
+                </td>
                 <td class="price">₹ {{ formatPrice(item.price) }}</td>
                 <td class="font-weight-bold">{{ item.quantity }}</td>
                 <td class="price">
@@ -122,12 +126,13 @@ export default {
               orderStaticID: vm.orderStaticID,
               orderID: data.orderID,
             });
-            await vm.handleEmptyCart();
+
+            vm.handleEmptyCart();
 
             vm.processing = false;
             vm.isPaid = false;
 
-            vm.$router.push("/"); // Redirect to Orders page TODO
+            vm.$router.push("/profile/orders"); // Redirect to Orders page TODO
           },
         })
         .render(this.$refs.paypal);
@@ -145,10 +150,10 @@ export default {
   },
   computed: {
     ...mapGetters(["formatPrice"]),
-    isEmpty: function () {
+    isEmpty: function() {
       return this.$store.state.cart && this.$store.state.cart.length === 0;
     },
-    cartItems: function () {
+    cartItems: function() {
       return this.$store.state.cart;
     },
     productTotal() {

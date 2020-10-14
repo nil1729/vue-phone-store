@@ -27,7 +27,11 @@
                 />
               </div>
             </th>
-            <td>{{ item.model }}</td>
+            <td>
+              <router-link :to="'/view/' + item._id">{{
+                item.model
+              }}</router-link>
+            </td>
             <td class="price">₹ {{ formatPrice(item.price) }}</td>
             <td>
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -134,7 +138,7 @@ export default {
     isChanged() {
       if (this.isChanged) {
         this.showSaveButton = true;
-        window.onbeforeunload = function () {
+        window.onbeforeunload = function() {
           return "Are you sure you want to leave? You are in the middle of something.";
         };
       } else {
@@ -144,10 +148,10 @@ export default {
   },
   computed: {
     ...mapGetters(["formatPrice"]),
-    isEmpty: function () {
+    isEmpty: function() {
       return this.$store.state.cart && this.$store.state.cart.length === 0;
     },
-    cartItems: function () {
+    cartItems: function() {
       return this.$store.state.cart;
     },
     productTotal() {

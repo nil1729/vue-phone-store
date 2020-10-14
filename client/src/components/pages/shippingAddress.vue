@@ -177,10 +177,10 @@ export default {
   },
   computed: {
     ...mapGetters(["formatPrice", "user"]),
-    isEmpty: function () {
+    isEmpty: function() {
       return this.$store.state.cart && this.$store.state.cart.length === 0;
     },
-    cartItems: function () {
+    cartItems: function() {
       return this.$store.state.cart;
     },
     productTotal() {
@@ -232,5 +232,6 @@ select {
 .header-shipping {
   width: fit-content;
   border-bottom: 1px solid grey;
+  font-weight: 400;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mb-5">
     <h1 class="mt-3 text-center order-text mx-auto mb-4">Your Orders</h1>
     <div v-if="loading" class="order-loader row">
       <img src="@/assets/search.gif" alt="" class="mx-auto" />
@@ -67,7 +67,11 @@
                     />
                   </div>
                 </th>
-                <td>{{ item.product.model }}</td>
+                <td>
+                  <router-link :to="'/view/' + item.product._id">{{
+                    item.product.model
+                  }}</router-link>
+                </td>
                 <td class="price">₹ {{ formatPrice(item.product.price) }}</td>
                 <td class="font-weight-bold">{{ item.quantity }}</td>
               </tr>
@@ -106,7 +110,6 @@ export default {
     openDetailTable(id) {
       const table = document.getElementById(`${id}-detail`);
       const button = document.getElementById(`${id}-button`);
-      console.log(id, table.style.display);
       if (table.classList.contains("hide")) {
         table.classList.remove("hide");
         button.innerHTML = "Hide";
