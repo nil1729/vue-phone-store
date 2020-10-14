@@ -138,17 +138,17 @@ export default {
     },
   },
   beforeRouteEnter(to, from, next) {
-    if (from.name === "Cart") next();
+    if (from.name === "Shipping-Address") next();
     else {
       next({ name: "Cart" });
     }
   },
   computed: {
     ...mapGetters(["formatPrice"]),
-    isEmpty: function() {
+    isEmpty: function () {
       return this.$store.state.cart && this.$store.state.cart.length === 0;
     },
-    cartItems: function() {
+    cartItems: function () {
       return this.$store.state.cart;
     },
     productTotal() {

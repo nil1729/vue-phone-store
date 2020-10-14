@@ -28,6 +28,7 @@ const store = new Vuex.Store({
 		productUploading: false,
 		viewProductFetching: false,
 		viewSingleProduct: null,
+		shippingAddress: null,
 	},
 	mutations: {
 		SET_ADMIN(state, status) {
@@ -48,6 +49,23 @@ const store = new Vuex.Store({
 			} else {
 				state.user.displayName = data.displayName;
 				state.user.phoneNumber = data.phoneNumber;
+			}
+		},
+		SET_SHIPPING_ADDRESS: function (state) {
+			const shippingData = localStorage.getItem('SHIPPING_ADDRESS');
+			if (shippingData) {
+				state.shippingAddress = JSON.parse(shippingData);
+			} else {
+				state.shippingAddress = {
+					phoneNumber: state.user.phoneNumber,
+					fullName: state.user.displayName,
+					address: "",
+					landmark: "",
+					city: "",
+					state: "",
+					zipCode: "",
+					country: "Choose ...",
+				};
 			}
 		},
 		SET_CART_STATE: function (state, cart) {
@@ -150,6 +168,7 @@ const store = new Vuex.Store({
 			}
 			context.commit('SET_ADMIN', user.siteAdmin);
 			context.commit('SET_USER_STATE', user.details);
+			context.commit('SET_SHIPPING_ADDRESS');
 			context.commit('SET_CART_STATE', user.cart);
 			context.commit('SET_PAGE_LOADING', false);
 			await context.dispatch('fetchProducts', 1);

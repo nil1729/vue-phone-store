@@ -46,6 +46,16 @@ const routes = [{
 				component: () => import('@/components/pages/checkout.vue'),
 			},
 			{
+				path: '/checkout/shipping',
+				name: 'Shipping-Address',
+				component: () => import('@/components/pages/shippingAddress.vue'),
+			},
+			{
+				path: '/profile/orders',
+				name: 'User-Orders',
+				component: () => import('@/components/pages/userOrder.vue'),
+			},
+			{
 				path: '*',
 				name: 'NotFound',
 				component: () => import('@/components/pages/NotFound.vue'),

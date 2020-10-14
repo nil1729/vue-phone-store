@@ -62,6 +62,12 @@
             <router-link
               @click="dropdownOpen = false"
               class="dropdown-item"
+              to="/profile/orders"
+              >Your Orders</router-link
+            >
+            <router-link
+              @click="dropdownOpen = false"
+              class="dropdown-item"
               to="/profile/settings"
               >Settings</router-link
             >
@@ -95,13 +101,13 @@ export default {
     },
   },
   computed: {
-    photoURL: function() {
+    photoURL: function () {
       return this.$store.state.user && this.$store.state.user.photoURL;
     },
-    displayName: function() {
+    displayName: function () {
       return this.$store.state.user && this.$store.state.user.displayName;
     },
-    cartItems: function() {
+    cartItems: function () {
       return this.$store.state.cart && this.$store.state.cart.length;
     },
   },

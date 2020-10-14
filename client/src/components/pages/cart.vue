@@ -184,7 +184,7 @@ export default {
         if (this.isChanged) {
           await this.handleSaveCart();
         }
-        this.$router.push("/checkout");
+        this.$router.push("/checkout/shipping");
       } catch (error) {
         console.error(error);
       }
