@@ -64,7 +64,8 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
     try {
         const {
             orderID,
-            orderStaticID
+            orderStaticID,
+            shippingAddress
         } = req.body;
 
         const request = new checkoutNodeJssdk.orders.OrdersCaptureRequest(orderID);
@@ -75,6 +76,8 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
 
         const capture = captureDoc.result;
 
+        console.log(shippingAddress);
+
         if (capture.status === 'COMPLETED') {
             await Order.updateOne({
                 _id: orderStaticID
@@ -83,6 +86,7 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
                     isPurchased: true,
                     orderID: capture.id,
                     captureID: capture.purchase_units[0].payments.captures[0].id,
+                    shippingAddress: shippingAddress
                 }
             });
 

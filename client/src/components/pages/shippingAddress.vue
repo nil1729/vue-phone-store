@@ -106,31 +106,37 @@
         </div>
         <div class="col-md-4">
           <div class="container flex-column mx-auto mt-3 px-4 py-3 border">
-            <h3 class="border-bottom pb-1">Order Summary</h3>
-            <p class="mb-1 text-primary mt-3">
-              Products Total :
-              <span class="ml-2 font-weight-normal text-dark"
-                >₹ {{ formatPrice(productTotal) }}</span
-              >
-            </p>
-            <p class="mb-1 text-primary">
-              Tax (GST 5%) :
-              <span class="ml-2 font-weight-normal text-dark"
-                >₹ {{ formatPrice(taxTotal) }}</span
-              >
-            </p>
+            <div v-if="isEmpty">
+              <h3 class="text-center">Your Cart is Currently Empty</h3>
+            </div>
+            <div v-else>
+              <h3 class="border-bottom pb-1">Order Summary</h3>
+              <p class="mb-1 text-primary mt-3">
+                Products Total :
+                <span class="ml-2 font-weight-normal text-dark"
+                  >₹ {{ formatPrice(productTotal) }}</span
+                >
+              </p>
+              <p class="mb-1 text-primary">
+                Tax (GST 5%) :
+                <span class="ml-2 font-weight-normal text-dark"
+                  >₹ {{ formatPrice(taxTotal) }}</span
+                >
+              </p>
 
-            <hr class="my-2" />
-            <p class="lead mb-1 text-primary">
-              Grand Total :
-              <span class="ml-2 font-weight-normal text-dark"
-                >₹ {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
-              >
-            </p>
-            <div class="row mt-3">
-              <button type="submit" class="mx-auto btn btn-primary">
-                Proceed to Payment
-              </button>
+              <hr class="my-2" />
+              <p class="lead mb-1 text-primary">
+                Grand Total :
+                <span class="ml-2 font-weight-normal text-dark"
+                  >₹
+                  {{ formatPrice((taxTotal + productTotal).toFixed(2)) }}</span
+                >
+              </p>
+              <div class="row mt-3">
+                <button type="submit" class="mx-auto btn btn-primary">
+                  Proceed to Payment
+                </button>
+              </div>
             </div>
           </div>
         </div>

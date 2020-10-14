@@ -282,13 +282,14 @@ const store = new Vuex.Store({
 
 		async verifyPurchase(context, {
 			orderID,
-			orderStaticID
+			orderStaticID,
 		}) {
 			try {
 				const res = await axios.post(
 					'/api/v1//checkout/verify-order', {
 						orderID,
-						orderStaticID
+						orderStaticID,
+						shippingAddress: context.state.shippingAddress
 					},
 					createConfig()
 				);
