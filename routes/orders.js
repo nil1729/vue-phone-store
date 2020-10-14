@@ -16,7 +16,10 @@ router.get('/checkout', verifyAuth, async (req, res) => {
             let cartItems = [];
             userDoc.data().cart.forEach(item => {
                 total += (item.price * item.quantity);
-                cartItems.push(item._id);
+                cartItems.push({
+                    product: item._id,
+                    quantity: item.quantity
+                });
             });
             total += (total * 0.05);
 
@@ -86,7 +89,8 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
                     isPurchased: true,
                     orderID: capture.id,
                     captureID: capture.purchase_units[0].payments.captures[0].id,
-                    shippingAddress: shippingAddress
+                    shippingAddress: shippingAddress,
+                    // orderCreated: new Date();
                 }
             });
 
@@ -116,6 +120,28 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
 
 
 // View Order Details
-
+router.get('/user/orders', verifyAuth, async (req, res) => {
+    try {
+        const orders = await Order.find({
+            user: req.authID,
+            isPurchased: true
+        }, {
+            captureID: 0,
+            user: 0,
+            createdAt: 0,
+            __v: 0
+        }).sort({
+            updatedAt: -1
+        }).populate('products.product').exec();
+        return res.json({
+            orders,
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(err.statusCode).json({
+            error: JSON.parse(err.message)
+        });
+    }
+});
 
 module.exports = router;
