@@ -31,7 +31,7 @@
             <tbody>
               <th scope="row">₹ {{ formatPrice(order.amount) }}</th>
               <td>{{ order.orderID }}</td>
-              <td>{{ formatTime(order.updatedAt) }}</td>
+              <td>{{ formatTime(order.transactionTime) }}</td>
               <td class="price">{{ order.isDelivered ? "YES" : "NO" }}</td>
               <td class="font-weight-bold lead">
                 <button
@@ -95,7 +95,7 @@ export default {
   },
   computed: {
     ...mapGetters(["formatPrice", "formatTime"]),
-    isEmpty: function() {
+    isEmpty: function () {
       return (
         this.$store.state.userOrders &&
         this.$store.state.userOrders.length === 0

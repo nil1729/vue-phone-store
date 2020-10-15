@@ -135,6 +135,17 @@ const store = new Vuex.Store({
     },
     SET_ADMIN_ORDER_STATE(state, payload) {
       state.adminOrders = payload;
+    },
+    UPDATE_ADMIN_ORDERS_STATUS(state, payload) {
+      state.adminOrders = state.adminOrders.map(order => {
+        if (order._id === payload._id) {
+          return {
+            ...order,
+            updatedAt: payload.updatedAt,
+            isDelivered: payload.isDelivered,
+          }
+        } else return order;
+      });
     }
   },
   getters: {
@@ -426,7 +437,24 @@ const store = new Vuex.Store({
       } catch (err) {
         console.log(err);
       }
+    },
+
+    async updateDeliveryStatus(context, id) {
+      try {
+        const res = await axios.post('/api/v1/admin/orders/update', {
+          orderStaticID: id
+        }, createConfig());
+
+        if (res.data.order) {
+          context.commit('UPDATE_ADMIN_ORDERS_STATUS', res.data.order);
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
     }
+
+
   },
 });
 

@@ -33,8 +33,22 @@
             <tbody>
               <th scope="row">₹ {{ formatPrice(order.amount) }}</th>
               <td>{{ order.orderID }}</td>
-              <td>{{ formatTime(order.updatedAt) }}</td>
-              <td class="price">{{ order.isDelivered ? "YES" : "NO" }}</td>
+              <td>{{ formatTime(order.transactionTime) }}</td>
+              <td class="price">
+                <p v-if="!order.isDelivered" class="lead">
+                  NO
+                  <button
+                    :disabled="updateOrderLoading"
+                    @click="updateOrderStatus(order._id)"
+                    class="delivery-btn ml-2 btn btn-outline-success"
+                  >
+                    <i class="fal fa-check"></i>
+                  </button>
+                </p>
+                <p v-if="order.isDelivered">
+                  {{ formatTime(order.updatedAt) }}
+                </p>
+              </td>
               <td class="font-weight-bold lead">
                 <button
                   :id="order._id + '-button'"
@@ -167,6 +181,7 @@ export default {
   data() {
     return {
       loading: true,
+      updateOrderLoading: false,
     };
   },
   computed: {
@@ -198,11 +213,19 @@ export default {
         button.classList.add("btn-outline-info");
       }
     },
+    async updateOrderStatus(id) {
+      this.updateOrderLoading = true;
+      await this.$store.dispatch("updateDeliveryStatus", id);
+      this.updateOrderLoading = false;
+    },
   },
 };
 </script>
 
 <style scoped>
+.delivery-btn {
+  font-size: 1.1rem;
+}
 h5.order-header {
   border-bottom: 1.5px solid #dee2e6;
   width: fit-content;

@@ -100,10 +100,10 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
             }, {
                 $set: {
                     isPurchased: true,
+                    transactionTime: new Date(),
                     orderID: capture.id,
                     captureID: capture.purchase_units[0].payments.captures[0].id,
                     shippingAddress: shippingAddress,
-                    // orderCreated: new Date();
                 }
             });
 
@@ -202,6 +202,58 @@ router.get('/admin/orders', verifyAuth, async (req, res) => {
         });
     }
 });
+
+
+// Update Delivery Status 
+router.post('/admin/orders/update', verifyAuth, async (req, res) => {
+    try {
+        if (!req.siteAdmin) {
+            return res.status(403).json({
+                msg: 'Unauthorized Access',
+            });
+        }
+
+        const orderDeliveryCheck = await Order.findOne({
+            _id: req.body.orderStaticID
+        }, {
+            isDelivered: 1
+        });
+
+        if (orderDeliveryCheck.isDelivered) {
+            return res.status(400).json({
+                msg: 'Order already delivered to customer'
+            });
+        }
+
+
+        await Order.updateOne({
+            _id: req.body.orderStaticID,
+        }, {
+            $set: {
+                isDelivered: true
+            }
+        });
+
+        const order = await Order.findOne({
+            _id: req.body.orderStaticID
+        }, {
+            updatedAt: 1,
+            isDelivered: 1
+        });
+
+        return res.json({
+            order,
+            msg: 'Order updated Successfully'
+        });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(err.statusCode).json({
+            error: JSON.parse(err.message)
+        });
+    }
+});
+
 
 
 module.exports = router;

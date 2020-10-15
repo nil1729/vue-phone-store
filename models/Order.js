@@ -43,6 +43,9 @@ const OrderSchema = mongoose.Schema({
     },
     captureID: {
         type: String,
+    },
+    transactionTime: {
+        type: Date,
     }
 }, {
     timestamps: true
