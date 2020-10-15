@@ -4,6 +4,8 @@ const verifyAuth = require('../middleware/auth');
 const admin = require('../config/admin');
 const paginate = require('../middleware/paginate');
 const Product = require('../models/Product');
+const User = require('../models/User');
+
 
 router.get('/products', [verifyAuth, paginate(Product)], async (req, res) => {
 	try {
@@ -24,12 +26,13 @@ router.get('/products', [verifyAuth, paginate(Product)], async (req, res) => {
 
 router.post('/save-cart', verifyAuth, async (req, res) => {
 	try {
-		await admin.firestore().collection('users').doc(req.authID).set(
-			{
-				cart: req.body.cart,
-			},
-			{ merge: true }
-		);
+		await User.updateOne({
+			'details.id': req.authID
+		}, {
+			$set: {
+				cart: req.body.cart
+			}
+		});
 		return res.status(200).json({
 			msg: 'Cart items Saved',
 		});

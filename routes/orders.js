@@ -6,30 +6,45 @@ const verifyAuth = require("../middleware/auth");
 const payPalClient = require('../config/paypal');
 const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
 const Order = require('../models/Order');
+const User = require('../models/User');
 
 
+
+// Routes
 router.get('/checkout', verifyAuth, async (req, res) => {
     try {
-        const userDoc = await admin.firestore().collection("users").doc(req.authID).get();
+
+        const customer = await User.findOne({
+            'details.id': req.authID
+        }, {
+            __v: 0,
+            createdAt: 0,
+            updatedAt: 0
+        });
+
         let total = 0;
-        if (userDoc.exists) {
+        if (customer) {
             let cartItems = [];
-            userDoc.data().cart.forEach(item => {
+            customer.cart.forEach(item => {
                 total += (item.price * item.quantity);
                 cartItems.push({
                     product: item._id,
                     quantity: item.quantity
                 });
             });
+
             total += (total * 0.05);
 
             let order = await Order.findOne({
-                user: req.authID
+                "customer.authID": req.authID
             });
 
             if (!order || (order && order.isPurchased)) {
                 order = await Order.create({
-                    user: req.authID,
+                    customer: {
+                        authID: req.authID,
+                        databaseID: customer._id
+                    },
                     products: cartItems,
                     amount: parseFloat(total.toFixed(2)),
                 });
@@ -79,8 +94,6 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
 
         const capture = captureDoc.result;
 
-        console.log(shippingAddress);
-
         if (capture.status === 'COMPLETED') {
             await Order.updateOne({
                 _id: orderStaticID
@@ -97,7 +110,7 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
             const order = await Order.findOne({
                 _id: orderStaticID
             }, {
-                user: 0,
+                customer: 0,
                 captureID: 0,
                 createdAt: 0,
                 __v: 0
@@ -125,17 +138,20 @@ router.post('/checkout/verify-order', verifyAuth, async (req, res) => {
 router.get('/user/orders', verifyAuth, async (req, res) => {
     try {
         const orders = await Order.find({
-            user: req.authID,
+            "customer.authID": req.authID,
             isPurchased: true
         }, {
             captureID: 0,
-            user: 0,
+            customer: 0,
             createdAt: 0,
             __v: 0
         }).sort({
             updatedAt: -1
         }).populate({
             path: 'products.product',
+            select: '-description -createdAt -updatedAt -__v'
+        }).populate({
+            path: 'user',
             select: '-description -createdAt -updatedAt -__v'
         }).exec();
         return res.json({
@@ -148,5 +164,44 @@ router.get('/user/orders', verifyAuth, async (req, res) => {
         });
     }
 });
+
+
+// Admin Orders
+router.get('/admin/orders', verifyAuth, async (req, res) => {
+    try {
+        if (!req.siteAdmin) {
+            return res.status(403).json({
+                msg: 'Unauthorized Access',
+            });
+        }
+
+        const orders = await Order.find({
+            isPurchased: true
+        }, {
+            __v: 0,
+            createdAt: 0,
+            "customer.authID": 0
+        }).sort({
+            updatedAt: -1
+        }).populate({
+            path: 'products.product',
+            select: '-description -createdAt -updatedAt -__v'
+        }).populate({
+            path: 'customer.databaseID',
+            select: 'details -_id'
+        }).exec();
+
+        return res.json({
+            orders,
+        });
+
+    } catch (err) {
+        console.log(err);
+        return res.status(err.statusCode).json({
+            error: JSON.parse(err.message)
+        });
+    }
+});
+
 
 module.exports = router;

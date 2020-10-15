@@ -7,6 +7,9 @@ const {
 const validator = require("validator");
 const admin = require("../config/admin");
 const verifyAuth = require("../middleware/auth");
+const User = require("../models/User");
+
+
 
 router.get("/register", verifyAuth, async (req, res) => {
 	try {
@@ -25,18 +28,27 @@ router.get("/register", verifyAuth, async (req, res) => {
 			displayName,
 			photoURL: "https://occtao.com/?qa=image&qa_blobid=10029442562307742919&qa_size=200",
 		});
-		const user = {
+
+		await User.create({
 			details: {
 				id: req.authID,
 				...updatedUser.providerData[0],
 				phoneNumber: null,
 			},
-			cart: [],
-		};
-		await admin.firestore().collection("users").doc(req.authID).set(user);
+		});
+
+		const user = await User.findOne({
+			'details.id': req.authID
+		}, {
+			__v: 0,
+			createdAt: 0,
+			updatedAt: 0
+		});
+
+
 		return res.json({
 			user: {
-				...user,
+				...user._doc,
 				siteAdmin: req.siteAdmin,
 			},
 		});
@@ -50,18 +62,26 @@ router.get("/register", verifyAuth, async (req, res) => {
 
 router.post("/google-register", verifyAuth, async (req, res) => {
 	try {
-		const user = {
+
+		await User.create({
 			details: {
 				id: req.authID,
 				...req.body.user,
 				phoneNumber: null,
-			},
-			cart: [],
-		};
-		await admin.firestore().collection("users").doc(req.authID).set(user);
+			}
+		});
+
+		const user = await User.findOne({
+			'details.id': req.authID
+		}, {
+			__v: 0,
+			createdAt: 0,
+			updatedAt: 0
+		});
+
 		return res.json({
 			user: {
-				...user,
+				...user._doc,
 				siteAdmin: req.siteAdmin,
 			},
 		});
@@ -75,14 +95,16 @@ router.post("/google-register", verifyAuth, async (req, res) => {
 
 router.get("/login", verifyAuth, async (req, res) => {
 	try {
-		const docSnap = await admin
-			.firestore()
-			.collection("users")
-			.doc(req.authID)
-			.get();
+		const user = await User.findOne({
+			'details.id': req.authID
+		}, {
+			__v: 0,
+			createdAt: 0,
+			updatedAt: 0
+		});
 		return res.json({
 			user: {
-				...docSnap.data(),
+				...user._doc,
 				siteAdmin: req.siteAdmin,
 			},
 		});
@@ -105,8 +127,12 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 			await admin.auth().updateUser(req.authID, {
 				photoURL,
 			});
-			await admin.firestore().collection("users").doc(req.authID).update({
-				"details.photoURL": photoURL,
+			await User.updateOne({
+				'details.id': req.authID
+			}, {
+				$set: {
+					"details.photoURL": photoURL
+				}
 			});
 			return res.status(200).json({
 				msg: "Profile Photo Updated Succesfully",
@@ -131,17 +157,29 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 			await admin.auth().updateUser(req.authID, {
 				displayName,
 			});
-			await admin.firestore().collection("users").doc(req.authID).update({
-				"details.displayName": displayName,
-				"details.phoneNumber": phoneNumber,
+			await User.updateOne({
+				'details.id': req.authID
+			}, {
+				$set: {
+					"details.displayName": displayName,
+					"details.phoneNumber": phoneNumber,
+				}
 			});
 		} else if (displayName) {
-			await admin.firestore().collection("users").doc(req.authID).update({
-				"details.displayName": displayName,
+			await User.updateOne({
+				'details.id': req.authID
+			}, {
+				$set: {
+					"details.displayName": displayName,
+				}
 			});
 		} else if (phoneNumber) {
-			await admin.firestore().collection("users").doc(req.authID).update({
-				"details.phoneNumber": phoneNumber,
+			await User.updateOne({
+				'details.id': req.authID
+			}, {
+				$set: {
+					"details.phoneNumber": phoneNumber,
+				}
 			});
 		} else {
 			return res.status(400).json({
@@ -158,17 +196,5 @@ router.post("/update-profile-details", verifyAuth, async (req, res) => {
 		});
 	}
 });
-
-
-// router.get('/users', async (req, res) => {
-// 	const usersDoc = await admin.firestore().collection('users').get();
-// 	const data = [];
-// 	usersDoc.forEach(item => {
-// 		data.push(item.data());
-// 	});
-// 	res.json({
-// 		data
-// 	});
-// })
 
 module.exports = router;

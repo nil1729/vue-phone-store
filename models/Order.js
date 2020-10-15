@@ -10,9 +10,16 @@ const OrderSchema = mongoose.Schema({
             type: Number
         }
     }],
-    user: {
-        type: String,
-        required: true
+    customer: {
+        authID: {
+            type: String,
+            required: true
+        },
+        databaseID: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: 'User',
+        }
     },
     isPurchased: {
         type: Boolean,
