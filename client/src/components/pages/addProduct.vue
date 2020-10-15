@@ -11,9 +11,14 @@
             required
             type="text"
             class="form-control"
-            :class="[{'is-valid': isModel}, {'is-invalid': isModel===false}]"
+            :class="[
+              { 'is-valid': isModel },
+              { 'is-invalid': isModel === false },
+            ]"
           />
-          <div class="invalid-feedback">Model Name should not contain only Whitespaces</div>
+          <div class="invalid-feedback">
+            Model Name should not contain only Whitespaces
+          </div>
         </div>
         <div class="form-group col-md-6">
           <label>Brand Name</label>
@@ -22,20 +27,32 @@
               <div class="input-group-text">Made by</div>
             </div>
             <input
-              :class="[{'is-valid': isBrand}, {'is-invalid': isBrand===false}]"
+              :class="[
+                { 'is-valid': isBrand },
+                { 'is-invalid': isBrand === false },
+              ]"
               v-model="brand"
               required
               type="text"
               class="form-control"
               placeholder="One Plus"
             />
-            <div class="invalid-feedback">Brand Name should not contain only Whitespaces</div>
+            <div class="invalid-feedback">
+              Brand Name should not contain only Whitespaces
+            </div>
           </div>
         </div>
       </div>
       <div class="form-group">
         <label>Description</label>
-        <textarea v-model="description" required class="form-control" id cols="30" rows="5"></textarea>
+        <textarea
+          v-model="description"
+          required
+          class="form-control"
+          id
+          cols="30"
+          rows="5"
+        ></textarea>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -45,22 +62,33 @@
               <div class="input-group-text">₹</div>
             </div>
             <input
-              :class="[{'is-valid': isPrice}, {'is-invalid': isPrice===false}]"
+              :class="[
+                { 'is-valid': isPrice },
+                { 'is-invalid': isPrice === false },
+              ]"
               v-model="price"
               required
               type="text"
               class="form-control"
               placeholder="99.99"
             />
-            <div class="invalid-feedback">Price should be a Number greater than zero</div>
+            <div class="invalid-feedback">
+              Price should be a Number greater than zero
+            </div>
           </div>
         </div>
         <div class="form-group col-md-6">
           <label>Preview Image</label>
           <div class="input-group">
             <div class="custom-file">
-              <input @change="setFile" :name="file" required type="file" class="custom-file-input" />
-              <label class="custom-file-label">{{fileName}}</label>
+              <input
+                @change="setFile"
+                :name="file"
+                required
+                type="file"
+                class="custom-file-input"
+              />
+              <label class="custom-file-label">{{ fileName }}</label>
             </div>
           </div>
         </div>
@@ -75,8 +103,8 @@
 </template>
 
 <script>
-import firebase from "@/firebase";
 import validator from "validator";
+
 export default {
   name: "Admin-Add-Product",
   data() {
@@ -114,20 +142,6 @@ export default {
       }
       return true;
     },
-  },
-  async beforeRouteEnter(to, from, next) {
-    const user = await firebase.auth().currentUser;
-    const token = await user.getIdTokenResult();
-    if (token.claims.siteAdmin) {
-      next();
-    } else {
-      next({
-        path: "/",
-        query: {
-          redirect: "add-product",
-        },
-      });
-    }
   },
   methods: {
     async handleSubmit() {

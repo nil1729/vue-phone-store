@@ -247,6 +247,8 @@ const store = new Vuex.Store({
       localStorage.removeItem("authToken");
       await firebase.auth().signOut();
       context.commit("SET_USER_STATE", null);
+      context.commit("SET_CART_STATE", null);
+      context.commit("SET_USER_ORDERS", null);
     },
     async fetchProducts(context, page) {
       try {

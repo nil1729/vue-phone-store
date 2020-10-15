@@ -134,7 +134,10 @@ router.get('/user/orders', verifyAuth, async (req, res) => {
             __v: 0
         }).sort({
             updatedAt: -1
-        }).populate('products.product').exec();
+        }).populate({
+            path: 'products.product',
+            select: '-description -createdAt -updatedAt -__v'
+        }).exec();
         return res.json({
             orders,
         });

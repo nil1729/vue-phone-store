@@ -1,6 +1,8 @@
 <template>
   <div class="container bg-light py-4 px-5 my-3">
-    <h2 class="text-info text-center">{{ mode === 'login' ? 'Login' : 'Register' }}</h2>
+    <h2 class="text-info text-center">
+      {{ mode === "login" ? "Login" : "Register" }}
+    </h2>
     <hr class="mt-2 mb-4" id="line" />
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
@@ -13,13 +15,25 @@
           placeholder="Enter email"
           v-model="email"
           @keyup="checkEmail"
-          :class="[{'is-invalid': emailValid!=='valid' && emailValid}, {'is-valid': emailValid}]"
+          :class="[
+            { 'is-invalid': emailValid !== 'valid' && emailValid },
+            { 'is-valid': emailValid },
+          ]"
         />
         <small
           id="emailHelp"
           class="form-text"
-          :class="[{'text-danger': emailValid!=='valid'}, {'text-success': emailValid} ,{'text-muted': emailValid===null}]"
-        >{{emailValid===null ? emailValidDialog['initial'] : emailValidDialog[emailValid]}}</small>
+          :class="[
+            { 'text-danger': emailValid !== 'valid' },
+            { 'text-success': emailValid },
+            { 'text-muted': emailValid === null },
+          ]"
+          >{{
+            emailValid === null
+              ? emailValidDialog["initial"]
+              : emailValidDialog[emailValid]
+          }}</small
+        >
       </div>
       <div class="form-group">
         <label for="exampleInputPassword1">Password</label>
@@ -36,17 +50,27 @@
           type="submit"
           :disabled="submitted"
           class="btn btn-sm btn-danger"
-        >{{ submitted ? 'Loading ...' : mode === 'login' ? 'Login' : 'Register' }}</button>
+        >
+          {{
+            submitted ? "Loading ..." : mode === "login" ? "Login" : "Register"
+          }}
+        </button>
         <button
           @click="changeMode"
           type="button"
           class="btn btn-sm btn-info mx-2"
-        >Switch to {{ mode === 'login' ? 'Register' : 'Login' }}</button>
+        >
+          Switch to {{ mode === "login" ? "Register" : "Login" }}
+        </button>
       </div>
     </form>
     <h5 class="text-center text-dark mb-3">OR</h5>
     <div class="form-group text-center">
-      <button @click="handleGoogleLogin" type="button" class="btn btn-primary mx-2 g-sign-btn">
+      <button
+        @click="handleGoogleLogin"
+        type="button"
+        class="btn btn-primary mx-2 g-sign-btn"
+      >
         <i class="fab fa-google mr-2"></i>Sign in With Google
       </button>
     </div>
@@ -116,7 +140,8 @@ export default {
     routeChange() {
       this.$store.commit("SET_ERRORS", null);
       if (this.$route.query.redirect) {
-        return this.$router.push(`/${this.$route.query.redirect}`);
+        const redirect = this.$route.query.redirect.replaceAll("%2F", "/");
+        return this.$router.push(`${redirect}`);
       }
       this.$router.push("/");
     },

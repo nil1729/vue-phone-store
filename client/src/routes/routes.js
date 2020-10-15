@@ -1,4 +1,5 @@
 import Home from '@/components/pages/Home.vue';
+import AdminDefault from '@/components/pages/adminDefault.vue';
 
 const routes = [{
 		name: 'Authenticatiion',
@@ -31,11 +32,6 @@ const routes = [{
 				component: () => import('@/components/pages/Profile.vue'),
 			},
 			{
-				path: '/admin/add-product',
-				name: 'Admin-Add-Product',
-				component: () => import('@/components/pages/addProduct.vue'),
-			},
-			{
 				path: '/view/:id',
 				name: 'Product-View',
 				component: () => import('@/components/pages/ProductView.vue'),
@@ -54,6 +50,22 @@ const routes = [{
 				path: '/profile/orders',
 				name: 'User-Orders',
 				component: () => import('@/components/pages/userOrder.vue'),
+			},
+
+
+			// Admin Routes
+			{
+				path: 'admin',
+				children: [{
+					path: 'add-product',
+					component: () => import('@/components/pages/addProduct.vue')
+				}],
+				meta: {
+					requiresAdmin: true,
+				},
+				components: {
+					default: AdminDefault
+				}
 			},
 			{
 				path: '*',
