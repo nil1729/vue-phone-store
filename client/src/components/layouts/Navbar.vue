@@ -68,6 +68,13 @@
             <router-link
               @click="dropdownOpen = false"
               class="dropdown-item"
+              to="/admin"
+              v-if="$store.state.isAdmin"
+              >Admin Panel</router-link
+            >
+            <router-link
+              @click="dropdownOpen = false"
+              class="dropdown-item"
               to="/profile/settings"
               >Settings</router-link
             >

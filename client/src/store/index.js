@@ -10,7 +10,7 @@ const createConfig = () => {
   return {
     headers: {
       "Content-Type": "application/json",
-      "x-auth-token": localStorage.getItem("authToken"),
+      "x-auth-token": localStorage.getItem("AUTH_TOKEN"),
     },
   };
 };
@@ -32,6 +32,7 @@ const store = new Vuex.Store({
     viewSingleProduct: null,
     shippingAddress: null,
     userOrders: null,
+    adminOrders: null,
   },
   mutations: {
     SET_ADMIN(state, status) {
@@ -109,7 +110,11 @@ const store = new Vuex.Store({
       state.userOrders = payload;
     },
     ADD_ORDER_TO_LIST(state, payload) {
-      state.userOrders = [payload, ...state.userOrders];
+      if (state.userOrders && state.userOrders.length !== 0) {
+        state.userOrders = [payload, ...state.userOrders];
+      } else {
+        state.userOrders = [payload]
+      }
     },
 
     // Admin Mutations
@@ -128,6 +133,9 @@ const store = new Vuex.Store({
     SET_SINGLE_VIEW_PRODUCT(state, payload) {
       state.viewSingleProduct = payload;
     },
+    SET_ADMIN_ORDER_STATE(state, payload) {
+      state.adminOrders = payload;
+    }
   },
   getters: {
     formatPrice: () => (price) => {
@@ -166,7 +174,7 @@ const store = new Vuex.Store({
         ...data.providerData[0],
       };
       const idToken = await firebase.auth().currentUser.getIdToken(true);
-      localStorage.setItem("authToken", idToken);
+      localStorage.setItem("AUTH_TOKEN", idToken);
       if (type === "register") {
         let res = await axios.get("/api/v1/register", createConfig());
         user = res.data.user;
@@ -244,7 +252,7 @@ const store = new Vuex.Store({
       }
     },
     async userSignOut(context) {
-      localStorage.removeItem("authToken");
+      localStorage.removeItem("AUTH_TOKEN");
       await firebase.auth().signOut();
       context.commit("SET_USER_STATE", null);
       context.commit("SET_CART_STATE", null);
@@ -256,7 +264,7 @@ const store = new Vuex.Store({
           return;
         }
         context.commit("SET_PRODUCT_LOADING", true);
-        if (!localStorage.authToken) {
+        if (!localStorage.AUTH_TOKEN) {
           return;
         }
         const res = await axios.get(
@@ -268,6 +276,23 @@ const store = new Vuex.Store({
       } catch (e) {
         console.log(e);
       }
+    },
+    async fetchSingleProduct(context, id) {
+      context.commit("SET_VIEW_PRODUCT_FETCHING", true);
+      try {
+        const res = await axios.get(
+          "/api/v1/view/product/" + id,
+          createConfig()
+        );
+        if (!res.data.product) {
+          context.commit("SET_SINGLE_VIEW_PRODUCT", null);
+        } else {
+          context.commit("SET_SINGLE_VIEW_PRODUCT", res.data.product);
+        }
+      } catch (e) {
+        context.commit("SET_SINGLE_VIEW_PRODUCT", null);
+      }
+      context.commit("SET_VIEW_PRODUCT_FETCHING", false);
     },
     async addToCart(context, product) {
       try {
@@ -367,6 +392,8 @@ const store = new Vuex.Store({
         console.log(e);
       }
     },
+
+
     async fileUploadToStorage(context, file) {
       try {
         const storage = firebase.storage();
@@ -386,23 +413,20 @@ const store = new Vuex.Store({
         console.log(e);
       }
     },
-    async fetchSingleProduct(context, id) {
-      context.commit("SET_VIEW_PRODUCT_FETCHING", true);
+
+
+    async fetchAdminOrders(context) {
       try {
-        const res = await axios.get(
-          "/api/v1/view/product/" + id,
-          createConfig()
-        );
-        if (!res.data.product) {
-          context.commit("SET_SINGLE_VIEW_PRODUCT", null);
-        } else {
-          context.commit("SET_SINGLE_VIEW_PRODUCT", res.data.product);
+        if (!context.state.adminOrders) {
+          const res = await axios.get('/api/v1/admin/orders', createConfig());
+          if (res.data.orders) {
+            context.commit('SET_ADMIN_ORDER_STATE', res.data.orders);
+          }
         }
-      } catch (e) {
-        context.commit("SET_SINGLE_VIEW_PRODUCT", null);
+      } catch (err) {
+        console.log(err);
       }
-      context.commit("SET_VIEW_PRODUCT_FETCHING", false);
-    },
+    }
   },
 });
 
