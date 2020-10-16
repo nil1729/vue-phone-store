@@ -57,6 +57,10 @@ const routes = [{
 			{
 				path: 'admin',
 				children: [{
+						path: '',
+						component: () => import('@/components/pages/adminPanel.vue')
+					},
+					{
 						path: 'add-product',
 						component: () => import('@/components/pages/addProduct.vue')
 					},

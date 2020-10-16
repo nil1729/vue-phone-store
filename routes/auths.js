@@ -42,7 +42,8 @@ router.get("/register", verifyAuth, async (req, res) => {
 		}, {
 			__v: 0,
 			createdAt: 0,
-			updatedAt: 0
+			updatedAt: 0,
+			isAdmin: 0
 		});
 
 
@@ -76,7 +77,8 @@ router.post("/google-register", verifyAuth, async (req, res) => {
 		}, {
 			__v: 0,
 			createdAt: 0,
-			updatedAt: 0
+			updatedAt: 0,
+			isAdmin: 0
 		});
 
 		return res.json({
@@ -100,7 +102,8 @@ router.get("/login", verifyAuth, async (req, res) => {
 		}, {
 			__v: 0,
 			createdAt: 0,
-			updatedAt: 0
+			updatedAt: 0,
+			isAdmin: 0
 		});
 		return res.json({
 			user: {

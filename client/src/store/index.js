@@ -33,6 +33,7 @@ const store = new Vuex.Store({
     shippingAddress: null,
     userOrders: null,
     adminOrders: null,
+    adminStoreStats: null,
   },
   mutations: {
     SET_ADMIN(state, status) {
@@ -146,6 +147,9 @@ const store = new Vuex.Store({
           }
         } else return order;
       });
+    },
+    SET_ADMIN_STORE_STATS(state, payload) {
+      state.adminStoreStats = payload;
     }
   },
   getters: {
@@ -452,8 +456,20 @@ const store = new Vuex.Store({
       } catch (error) {
         console.log(error);
       }
-    }
+    },
 
+    async fetchStoreStatsAdmin(context) {
+      try {
+        if (!context.state.adminStoreStats) {
+          const res = await axios.get('/api/v1/admin/stats', createConfig());
+          if (res.data.stats) {
+            context.commit('SET_ADMIN_STORE_STATS', res.data.stats);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
   },
 });
