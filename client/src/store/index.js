@@ -272,6 +272,12 @@ const store = new Vuex.Store({
       context.commit("SET_USER_STATE", null);
       context.commit("SET_CART_STATE", null);
       context.commit("SET_USER_ORDERS", null);
+      context.commit('SET_ADMIN', false);
+      context.commit('SET_SHIPPING_ADDRESS', null);
+      context.commit('SET_PRODUCTS', null);
+      context.commit('SET_USER_ORDERS', null);
+      context.commit('SET_ADMIN_ORDER_STATE', null);
+      context.commit('SET_ADMIN_STORE_STATS', null);
     },
     async fetchProducts(context, page) {
       try {

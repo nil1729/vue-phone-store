@@ -17,22 +17,24 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
 
 1. `Node JS Express Framework` is used as a building Backend part of this Website.
 2. `MongoDB` is used to Store Products Details and URL of Photos.
-3. `firebase Storage` is used for store the Uploaded Files.
-4. `firebase Authentication` is used for for Authenticate a User. User can authenticate using **Google Sign in** or **Custom Email Password** Method.
+3. `Firebase Storage` is used for store the Uploaded Files.
+4. `Firebase Authentication` is used for for Authenticate a User. User can authenticate using **Google Sign in** or **Custom Email Password** Method.
 5. `Vue JS` is used as frontend Framework for building SPA.
 6. `Bootstrap` is used for building UI and this website is Responsive for Desktop Devices and Tabs only.
 7. Site has `Admin` functionality by which site owner can add Product to his Store.
-8. Site is responsive for Desktop Devices and Tabs. (I am working on responsiveness on small Devices)
+8. Site is responsive for Desktop Devices and Tabs. (I am working on for responsiveness on small Devices)
 
 ---
 
-## Run this Project on Local Environment.
+## Run this Project on Local Environment
 
 1. **Prerequisites**
+
    - NodeJS installed on your Local machine
    - MongoDB installed on your local machine or have an Atlas Account.
    - A Gmail Account for Firebase Services.
    - A PayPal Account and a Sandbox account for testing purposes.
+
 2. **Credentials Setup**
 
    - Create a `MongoDB Atlas` Account for Host this Project Online. Find Tutorials [here](https://www.youtube.com/watch?v=KKyag6t98g8).
@@ -85,15 +87,15 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
    - Create a `.env` file on root directory. Which Contains all necessary Secret Credentials (for backend only) for this site.
      ```
       DB_URI = <- Mongo Atlas URI ->
-      PAYPAL_CLIENT_ID= <- PayPal Sandbox Client ID (Also use your own client ID on Frontend) ->
-      PAYPAL_CLIENT_SECRET= <- PayPal Sandbox Client Secret (only for backend server to verify purchase) ->
+      PAYPAL_CLIENT_ID = <- PayPal Sandbox Client ID (Also use your own client ID on Frontend) ->
+      PAYPAL_CLIENT_SECRET = <- PayPal Sandbox Client Secret (Only for backend server to verify purchase) ->
      ```
    - Run this command
 
      ```
       >> npm run dev  // to start Vue Development server and Backend server together.
 
-      >> npm run server // to start only backend server
+      >> npm run server // to start only Backend server
 
       >> npm run Client // to start Vue Development server only (But it will not working alone as api depends on Backend also)
 

@@ -15,9 +15,9 @@ router.get('/admin/stats', verifyAuth, async (req, res) => {
             });
         }
 
-        const orderCount = await Order.count();
-        const productCount = await Product.count();
-        const customerCount = await User.count({
+        const orderCount = await Order.countDocuments();
+        const productCount = await Product.countDocuments();
+        const customerCount = await User.countDocuments({
             isAdmin: false
         });
 
