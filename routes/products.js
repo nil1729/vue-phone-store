@@ -24,6 +24,22 @@ router.get('/products', [verifyAuth, paginate(Product)], async (req, res) => {
 	}
 });
 
+router.post('/add-review', verifyAuth, async(req, res) => {
+	Product.updateOne(
+		{ _id: req.body.id },
+		{ $push: { reviews: req.body } },
+		function(error, result) {
+			if (error) {
+				console.log('error', error);
+			} else {
+				return res.status(200).json({
+					msg: 'Review Saved',
+				});
+			}
+		}
+	);
+});
+
 router.post('/save-cart', verifyAuth, async (req, res) => {
 	try {
 		await User.updateOne({

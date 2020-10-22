@@ -22,6 +22,13 @@ const productSchema = mongoose.Schema(
 			type: Number,
 			required: true,
 		},
+		reviews: [
+			{
+				name: String,
+				comment: String,
+				stars: Number
+			}
+		]
 	},
 	{ timestamps: true }
 );
