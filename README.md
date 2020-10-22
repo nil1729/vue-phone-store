@@ -9,6 +9,9 @@ Simple Phone Buying store Using VueJS, firebase, NodeJS and MongoDB.
   - Test Admin Credentials
     - Email: `admin@store.com`
     - Password: `123456`
+  - Test PayPal Credentials
+    - Email: `nil.personal.dev@gmail.com`
+    - Password: `123456789`
 - #### Github Repository [link](https://github.com/nil1729/vue-phone-store).
 
 ---
