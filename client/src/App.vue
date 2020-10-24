@@ -1,6 +1,6 @@
 <template>
   <div>
-    <app-alert />
+    <app-alert v-if="error" />
     <app-page-loader v-if="loading" />
     <router-view v-else />
   </div>
@@ -14,6 +14,9 @@ export default {
   computed: {
     loading() {
       return this.$store.state.pageLoading;
+    },
+    error() {
+      return this.$store.state.errors;
     },
   },
   watch: {

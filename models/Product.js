@@ -24,7 +24,9 @@ const productSchema = mongoose.Schema(
 		},
 		reviews: [
 			{
-				name: String,
+				customer: {
+					type: mongoose.Schema.Types.ObjectId,
+				},
 				comment: String,
 				stars: Number
 			}

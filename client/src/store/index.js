@@ -329,11 +329,14 @@ const store = new Vuex.Store({
         console.log(e);
       }
     },
+    
+    
+    
     async handleReview({ commit }, { review, id }) {
       review.id = id;
       try {
         const res = await axios.post(
-            "/api/v1/add-review",
+            "/api/v1/products/add-review",
             review,
             createConfig()
         );
@@ -343,11 +346,17 @@ const store = new Vuex.Store({
             message: res.data.msg,
           });
         }
-        return res.data;
+        return;
       } catch (error) {
         console.log(error);
       }
     },
+
+
+
+
+
+
     async saveCartProduct(context) {
       try {
         await axios.post(

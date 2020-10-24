@@ -24,10 +24,11 @@ router.get('/products', [verifyAuth, paginate(Product)], async (req, res) => {
 	}
 });
 
-router.post('/add-review', verifyAuth, async(req, res) => {
+router.post('/products/add-review', verifyAuth, async(req, res) => {
+	const customer = await User.findOne({ 'details.id': req.authID }, {_id: 1});
 	Product.updateOne(
 		{ _id: req.body.id },
-		{ $push: { reviews: req.body } },
+		{ $push: { reviews: {customer: customer._id, comment: req.body.comment, stars: req.body.stars} } },
 		function(error, result) {
 			if (error) {
 				console.log('error', error);

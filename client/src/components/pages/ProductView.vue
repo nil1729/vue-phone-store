@@ -27,30 +27,32 @@
           </h6>
           <p class="text-dark">{{ product.description }}</p>
 
-          <div class="card bg-light p-4 mb-3">
+          <router-link to="/" class="btn btn-outline-primary btn-sm mr-3">
+            <p class="mb-0">Back to Products</p>
+          </router-link>
+          <button
+            @click="addToCart(product)"
+            class="btn btn-sm btn-outline-warning"
+          >
+            <i
+              v-if="!hasCarted(product._id)"
+              class="fa-2x fal fa-cart-arrow-down"
+            ></i>
+            <p v-else class="mb-0">In Cart</p>
+          </button>
+          <div class="container my-4 review-container">
+            <div class="card bg-light p-4 mb-3">
             <h3 class="text-dark">Add a Review:</h3>
             <form @submit.prevent="processReview()">
               <div class="form-group">
-                <label for="review">Review:</label>
                 <textarea
                   name="review"
                   id="review"
-                  rows="3"
+                  rows="4"
                   class="form-control"
                   placeholder="Enter your review"
                   v-model="review.comment"
                 ></textarea>
-              </div>
-              <div class="form-group">
-                <label for="name">Name:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="name"
-                  name="name"
-                  placeholder="Enter your name"
-                  v-model="review.name"
-                />
               </div>
               <div class="form-group">
                 <div class="form-check form-check-inline">
@@ -114,25 +116,12 @@
                   >
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">
-                Submit Review
+              <button :disabled="review_processing" type="submit" class="btn btn-success review-btn">
+                {{review_processing ? 'Loading ...' : 'Submit Review'}}
               </button>
             </form>
           </div>
-
-          <router-link to="/" class="btn btn-outline-primary btn-sm mr-3">
-            <p class="mb-0">Back to Products</p>
-          </router-link>
-          <button
-            @click="addToCart(product)"
-            class="btn btn-sm btn-outline-warning"
-          >
-            <i
-              v-if="!hasCarted(product._id)"
-              class="fa-2x fal fa-cart-arrow-down"
-            ></i>
-            <p v-else class="mb-0">In Cart</p>
-          </button>
+          </div>
         </div>
       </div>
     </div>
@@ -160,9 +149,9 @@ export default {
     return {
       review: {
         comment: "",
-        name: "",
         stars: null
-      }
+      },
+      review_processing: false,
     };
   },
   async mounted() {
@@ -171,16 +160,21 @@ export default {
   methods: {
     ...mapActions(["addToCart"]),
     async processReview() {
+      if(this.review.comment.trim().length === 0 || this.review.stars === null) {
+        return;
+      }
+      this.review_processing = true;
       await this.$store.dispatch("handleReview", { review: this.review, id: this.product._id });
       this.review.comment = '';
-      this.review.name = '';
       this.review.stars = null;
+      this.review_processing = false;
     }
   }
 };
 </script>
 
 <style scoped>
+
 .image {
   height: 20rem;
 }
@@ -203,8 +197,22 @@ h6 {
   font-size: 0.9em;
   font-weight: 500;
 }
+.review-btn {
+  font-weight: 300!important;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
 p {
   line-height: 1.5rem;
   letter-spacing: 0.3px;
 }
+.review-container {
+  max-width: none!important;
+  width: 100%;
+  padding: 0;
+}
+textarea {
+  box-shadow: none!important;
+}
+
 </style>

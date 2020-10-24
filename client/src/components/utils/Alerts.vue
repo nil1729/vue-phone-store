@@ -40,10 +40,11 @@ export default {
 
 <style scoped>
 .toast {
-  position: absolute;
-  right: -5%;
+  position: fixed;
+  left: 77%;
   top: 5%;
   z-index: 350;
+  width: 300px;
   max-width: 300px;
   transition: all ease-in 0.2s;
 }
