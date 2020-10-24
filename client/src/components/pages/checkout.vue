@@ -63,6 +63,9 @@
               >
             </p>
             <div v-if="!isPaid">
+              <div v-if="!scriptLoaded" class='script__loader mx-auto my-3'>
+                <img src="@/assets/script-loader.gif" alt="">
+              </div>
               <div ref="paypal"></div>
             </div>
             <div v-else class="mt-4">
@@ -171,6 +174,10 @@ export default {
 </script>
 
 <style scoped>
+.script__loader {
+  height: 120px;
+  width: 120px;
+}
 .cart-empty-text,
 .cart-text {
   font-weight: 400;

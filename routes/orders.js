@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const validator = require("validator");
-const admin = require("../config/admin");
 const verifyAuth = require("../middleware/auth");
 const payPalClient = require('../config/paypal');
 const checkoutNodeJssdk = require('@paypal/checkout-server-sdk');
@@ -20,15 +18,15 @@ router.get('/checkout', verifyAuth, async (req, res) => {
             __v: 0,
             createdAt: 0,
             updatedAt: 0
-        });
+        }).populate({path: 'cart.product', select: 'price'}).exec();
 
         let total = 0;
         if (customer) {
             let cartItems = [];
             customer.cart.forEach(item => {
-                total += (item.price * item.quantity);
+                total += (item.product.price * item.quantity);
                 cartItems.push({
-                    product: item._id,
+                    product: item.product._id,
                     quantity: item.quantity
                 });
             });
