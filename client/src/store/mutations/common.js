@@ -10,8 +10,8 @@ export default {
         state.shippingAddress = JSON.parse(shippingData);
       } else {
         state.shippingAddress = {
-          phoneNumber: state.user.phoneNumber,
-          fullName: state.user.displayName,
+          phoneNumber: state.user && state.user.phoneNumber,
+          fullName: state.user && state.user.displayName,
           address: "",
           landmark: "",
           city: "",

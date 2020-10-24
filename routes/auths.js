@@ -97,17 +97,26 @@ router.post("/google-register", verifyAuth, async (req, res) => {
 
 router.get("/login", verifyAuth, async (req, res) => {
 	try {
-		const user = await User.findOne({
+		let user = await User.findOne({
 			'details.id': req.authID
 		}, {
 			__v: 0,
 			createdAt: 0,
 			updatedAt: 0,
 			isAdmin: 0
-		});
+		}).populate({path: 'cart.product', select: 'model photoURL price'}).exec();
+		user = {
+			...user._doc,
+			cart: user.cart.map(item => {
+				return {
+					...item.product._doc,
+					quantity: item.quantity,
+				}
+			}),
+		}
 		return res.json({
 			user: {
-				...user._doc,
+				...user,
 				siteAdmin: req.siteAdmin,
 			},
 		});

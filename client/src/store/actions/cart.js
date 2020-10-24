@@ -25,7 +25,12 @@ export default {
       try {
         await axios.post(
           "/api/v1/save-cart", {
-            cart: context.state.cart,
+            cart: context.state.cart.map(item => {
+              return {
+                product: item._id,
+                quantity: item.quantity,
+              }
+            }),
           },
           createConfig()
         );

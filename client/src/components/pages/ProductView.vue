@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="col-xl-8 col-md-12">
-                <h3 class="text-dark">Model: {{ product.model }}</h3>
+                <h3 class="text-muted">Model: <span class="text-dark">{{ product.model }}</span></h3>
                 <h5 class="text-muted">
                     Made By
                     <span class="text-dark">{{ product.brand }}</span>
@@ -44,13 +44,13 @@
                 </button>
 
                 <div class="container mt-2 review-container">
-                    <div class="text-center my-3">
+                    <div  class="text-left my-3">
                         <a href="#" class="text-info" @click.prevent='show_reviews = !show_reviews'>
-                            {{show_reviews ? 'Hide Reviews' : 'Show Reviews'}}
+                            {{show_reviews ? 'Hide Reviews' : 'Show Customer Reviews'}}
                         </a>
                     </div>
                     <div v-if="show_reviews">
-                      <div class="card bg-light p-4 mb-3">
+                      <div id='add-review-form' class="card bg-light p-4 mb-3">
                         <h3 class="text-dark">Add a Review:</h3>
                         <form @submit.prevent="processReview()">
                             <div class="form-group">
@@ -196,5 +196,8 @@ textarea {
 }
 .reviews {
     font-size: 1rem;
+}
+a {
+    font-size: 1.1rem;
 }
 </style>

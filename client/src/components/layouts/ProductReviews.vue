@@ -50,6 +50,7 @@ export default {
         ...mapGetters(['timeDuration', 'formatTime']),
     },
     async mounted() {
+        document.getElementById('add-review-form').scrollIntoView({behavior: "smooth", block: 'center', inline: 'center'});
         try {
             this.loading = true;
             await this.$store.dispatch("fecthProductReviews", this.productID);
@@ -57,7 +58,7 @@ export default {
         } catch (error) {
             console.error(error);
         }
-    }
+    },
 }
 </script>
 
