@@ -25,20 +25,26 @@ router.get('/products', [verifyAuth, paginate(Product)], async (req, res) => {
 });
 
 router.post('/products/add-review', verifyAuth, async(req, res) => {
-	const customer = await User.findOne({ 'details.id': req.authID }, {_id: 1});
-	Product.updateOne(
+	const customer = await User.findOne({ 'details.id': req.authID }, {_id: 1, details:1});
+	const review = {
+		customer: customer._id,
+		comment: req.body.comment, 
+		stars: req.body.stars,
+		commentedAt: new Date()
+	};
+	await Product.updateOne(
 		{ _id: req.body.id },
-		{ $push: { reviews: {customer: customer._id, comment: req.body.comment, stars: req.body.stars} } },
-		function(error, result) {
-			if (error) {
-				console.log('error', error);
-			} else {
-				return res.status(200).json({
-					msg: 'Review Saved',
-				});
-			}
+		{ $push: { reviews: review } });
+	review.customer = {
+		details: {
+			photoURL: customer.details.photoURL,
+			displayName: customer.details.displayName,
 		}
-	);
+	};
+	return res.status(200).json({
+			msg: 'Review Saved',
+			review,
+		});
 });
 
 router.post('/save-cart', verifyAuth, async (req, res) => {
@@ -82,9 +88,26 @@ router.post('/admin/add-product', verifyAuth, async (req, res) => {
 
 router.get('/view/product/:id', verifyAuth, async (req, res) => {
 	try {
-		const product = await Product.findById(req.params.id);
+		const product = await Product.findOne({_id: req.params.id}, { reviews: 0});
 		res.json({
 			product,
+		});
+	} catch (e) {
+		return res.status(500).json({
+			msg: 'Server error',
+		});
+	}
+});
+
+router.get('/product/:id/reviews', verifyAuth, async (req, res) => {
+	try {
+		const reviews = await Product.findOne({_id: req.params.id}, { reviews: 1}).populate({
+            path: 'reviews.customer',
+            select: 'details.photoURL details.displayName -_id'
+        }).exec();
+		res.json({
+			productID: req.params.id,
+			reviews: reviews.reviews,
 		});
 	} catch (e) {
 		return res.status(500).json({

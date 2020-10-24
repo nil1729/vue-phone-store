@@ -26,9 +26,14 @@ const productSchema = mongoose.Schema(
 			{
 				customer: {
 					type: mongoose.Schema.Types.ObjectId,
+					ref: 'User'
 				},
 				comment: String,
-				stars: Number
+				stars: Number,
+				commentedAt: {
+					type: Date,
+					required: true,
+				}
 			}
 		]
 	},

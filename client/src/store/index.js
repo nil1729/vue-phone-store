@@ -34,6 +34,7 @@ const store = new Vuex.Store({
     userOrders: null,
     adminOrders: null,
     adminStoreStats: null,
+    productReviews: null,
   },
   mutations: {
     SET_ADMIN(state, status) {
@@ -110,11 +111,25 @@ const store = new Vuex.Store({
     SET_USER_ORDERS(state, payload) {
       state.userOrders = payload;
     },
+
+
     ADD_ORDER_TO_LIST(state, payload) {
       if (state.userOrders && state.userOrders.length !== 0) {
         state.userOrders = [payload, ...state.userOrders];
       } else {
         state.userOrders = [payload]
+      }
+    },
+
+    SET_PRODUCT_REVIEWS(state, payload) {
+      state.productReviews = payload;      
+    },
+
+    ADD_REVIEW_TO_LIST(state, payload) {
+      if (state.productReviews && state.productReviews.reviews.length !== 0) {
+        state.productReviews.reviews = [payload, ...state.productReviews.reviews];
+      } else {
+        state.productReviews.reviews = [payload]
       }
     },
 
@@ -164,6 +179,10 @@ const store = new Vuex.Store({
 
     formatTime: () => (time) => {
       return moment(time).format("MMM Do YYYY, h:mm a");
+    },
+    
+    timeDuration: () => (time) => {
+      return moment(time, "YYYYMMDD").fromNow();
     },
 
     hasCarted: (state) => (id) => {
@@ -341,6 +360,7 @@ const store = new Vuex.Store({
             createConfig()
         );
         if (res.status === 200) {
+          commit('ADD_REVIEW_TO_LIST', res.data.review);
           commit("SET_ERRORS", {
             code: "Notification",
             message: res.data.msg,
@@ -352,10 +372,22 @@ const store = new Vuex.Store({
       }
     },
 
-
-
-
-
+    async fecthProductReviews(context, id) {
+      try {
+        if(context.state.productReviews && context.state.productReviews.productID === id) {
+          return;
+        }
+        const res = await axios.get(
+          `/api/v1/product/${id}/reviews`,
+          createConfig()
+        );
+        if(res.status === 200) {
+          context.commit('SET_PRODUCT_REVIEWS', res.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
 
     async saveCartProduct(context) {
       try {
