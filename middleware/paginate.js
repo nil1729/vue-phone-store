@@ -17,11 +17,9 @@ module.exports = model => {
 				products.next = page + 1;
 			}
 			products.results = await model
-				.find()
+				.find({}, {description: 0, brand: 0, averageRating: 0, reviews: 0})
 				.sort({ updatedAt: -1 })
 				.limit(pageLen)
-				.select('-description')
-				.select('-brand')
 				.skip(startIndex)
 				.exec();
 			req.paginatedResults = products;
