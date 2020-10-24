@@ -133,6 +133,13 @@ const store = new Vuex.Store({
       }
     },
 
+    UPDATE_PRODUCT_AVERAGE_RATING(state, payload) {
+      state.viewSingleProduct = {
+        ...state.viewSingleProduct,
+        averageRating: payload,
+      }
+    },
+
     // Admin Mutations
     SET_PRODUCT_UPLOADING(state, payload) {
       state.productUploading = payload;
@@ -361,6 +368,7 @@ const store = new Vuex.Store({
         );
         if (res.status === 200) {
           commit('ADD_REVIEW_TO_LIST', res.data.review);
+          commit('UPDATE_PRODUCT_AVERAGE_RATING', res.data.averageRating);
           commit("SET_ERRORS", {
             code: "Notification",
             message: res.data.msg,

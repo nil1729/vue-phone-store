@@ -22,6 +22,14 @@
                     <span class="text-muted">Price:</span>
                     ₹ {{ formatPrice(product.price) }}
                 </h5>
+
+                <h5 class="text-muted">
+                    Average Rating: 
+                    <!--- Star Ratings  --->
+                    <div class="reviews stars-outer ml-1">
+                        <div class="stars-inner" :style="{'width': `${(product.averageRating/5)*100}%`}"></div>
+                    </div>
+                </h5>
                 <h6 class="text-danger border-bottom border-dark">
                     Some info about the Product
                 </h6>
@@ -37,9 +45,9 @@
 
                 <div class="container mt-2 review-container">
                     <div class="text-center my-3">
-                        <button @click='show_reviews = !show_reviews' class="btn" :class="[{'btn-info':show_reviews}, {'btn-primary':!show_reviews}]">
+                        <a href="#" class="text-info" @click.prevent='show_reviews = !show_reviews'>
                             {{show_reviews ? 'Hide Reviews' : 'Show Reviews'}}
-                        </button>
+                        </a>
                     </div>
                     <div v-if="show_reviews">
                       <div class="card bg-light p-4 mb-3">
@@ -185,5 +193,8 @@ p {
 
 textarea {
     box-shadow: none !important;
+}
+.reviews {
+    font-size: 1rem;
 }
 </style>

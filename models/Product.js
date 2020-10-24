@@ -35,7 +35,11 @@ const productSchema = mongoose.Schema(
 					required: true,
 				}
 			}
-		]
+		],
+		averageRating: {
+			type: Object,
+			default: 0
+		},
 	},
 	{ timestamps: true }
 );

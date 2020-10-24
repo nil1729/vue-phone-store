@@ -35,15 +35,21 @@ router.post('/products/add-review', verifyAuth, async(req, res) => {
 	await Product.updateOne(
 		{ _id: req.body.id },
 		{ $push: { reviews: review } });
+	await Product.updateOne({ _id: req.body.id}, [{$set: {averageRating: { $avg: "$reviews.stars" } }}]);
+	
 	review.customer = {
 		details: {
 			photoURL: customer.details.photoURL,
 			displayName: customer.details.displayName,
 		}
 	};
+	
+	const product = await Product.findOne({_id: req.body.id}, {averageRating: 1, _id: 0});
+	
 	return res.status(200).json({
 			msg: 'Review Saved',
 			review,
+			averageRating: product.averageRating
 		});
 });
 
@@ -89,7 +95,7 @@ router.post('/admin/add-product', verifyAuth, async (req, res) => {
 router.get('/view/product/:id', verifyAuth, async (req, res) => {
 	try {
 		const product = await Product.findOne({_id: req.params.id}, { reviews: 0});
-		res.json({
+		return res.json({
 			product,
 		});
 	} catch (e) {
